@@ -1,8 +1,8 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="mlpipeline",
-    version="0.0.1",
+    name="logi-mlpipeline",
+    version="1.0.0",
     description="ML Pipeline python package and CLI",
     author="Badr Larhdir",
     url="https://github.com/badrlarhdir/logi-mlpipeline",
