@@ -1,10 +1,12 @@
 from __future__ import annotations
+
 import os
 import shutil
 
 import yaml
 
-from . import pipeline_steps, report_steps
+from mlpipeline import pipeline_steps, report_steps
+
 from .globals import PIPELINES_FOLDER
 
 
