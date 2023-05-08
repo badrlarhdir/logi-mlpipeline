@@ -1,0 +1,13 @@
+base:
+  DATA_DIR: ../data/
+  KERNEL_NAME: venv
+  UTILS_DIR: ./
+data_preprocess:
+  DATA_NAME: train_data_cleaning.csv
+train:
+  EARLY_STOPPING_MIN_DELTA: 0
+  EARLY_STOPPING_MODE: auto
+  EARLY_STOPPING_MONITOR: val_loss
+  EARLY_STOPPING_PATIENCE: 5
+  EPOCHS: 100
+  MAX_LEN: 20

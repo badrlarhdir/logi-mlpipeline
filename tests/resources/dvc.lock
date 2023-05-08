@@ -1,0 +1,90 @@
+schema: '2.0'
+stages:
+  data_preprocess:
+    cmd: papermill ./data_preprocess.ipynb ../outputs/data_preprocess_out.ipynb -p
+      UTILS_DIR ./ -p DATA_DIR ../data/ -p DATA_NAME train_data_cleaning.csv -k venv
+    deps:
+    - path: ../data/train_data_cleaning.csv
+      md5: 56eed158bd29bd1998e1889bec48a0dc
+      size: 920146
+    - path: utils/clean_text.py
+      md5: 9ef5cc74b1e2dc3f5554545e1db3326c
+      size: 939
+    - path: utils/counter_word.py
+      md5: 9a404adad862bb32250c18d47fc0b4f6
+      size: 181
+    - path: utils/plot_target.py
+      md5: 58fe1989d4b495f1307e66a671c7eeb7
+      size: 266
+    params:
+      params.yaml:
+        base:
+          DATA_DIR: ../data/
+          KERNEL_NAME: venv
+          UTILS_DIR: ./
+        data_preprocess:
+          DATA_NAME: train_data_cleaning.csv
+    outs:
+    - path: ../data/X.pckl
+      md5: a50426e140cdceda2e2af6ae2fa32c1d
+      size: 497587
+    - path: ../data/X_test.pckl
+      md5: b993c07a39df1cfda9d9ff8d561d4b8c
+      size: 123602
+    - path: ../data/X_train.pckl
+      md5: eaff1a925e54ffb1d5c54888b068de66
+      size: 496503
+    - path: ../data/counter.pckl
+      md5: 9ff92e5757b68fb6186b466363d37794
+      size: 192255
+    - path: ../data/y.pckl
+      md5: 55065350074073dfae4ed587dc974dc5
+      size: 61520
+    - path: ../data/y_test.pckl
+      md5: b5e41583cd5f02a3ff3363e76290146d
+      size: 37172
+    - path: ../data/y_train.pckl
+      md5: fc76d4efdae50295d1a8a5373aeb74c2
+      size: 146789
+  train:
+    cmd: papermill ./train.ipynb ../outputs/train_out.ipynb -p UTILS_DIR ./ -p DATA_DIR
+      ../data/ -p MAX_LEN 20 -p EPOCHS 100 -p EARLY_STOPPING_MONITOR val_loss -p EARLY_STOPPING_MIN_DELTA
+      0 -p EARLY_STOPPING_PATIENCE 5 -p EARLY_STOPPING_MODE auto -k venv
+    deps:
+    - path: ../data/X.pckl
+      md5: a50426e140cdceda2e2af6ae2fa32c1d
+      size: 497587
+    - path: ../data/X_test.pckl
+      md5: b993c07a39df1cfda9d9ff8d561d4b8c
+      size: 123602
+    - path: ../data/X_train.pckl
+      md5: eaff1a925e54ffb1d5c54888b068de66
+      size: 496503
+    - path: ../data/counter.pckl
+      md5: 9ff92e5757b68fb6186b466363d37794
+      size: 192255
+    - path: ../data/y.pckl
+      md5: 55065350074073dfae4ed587dc974dc5
+      size: 61520
+    - path: ../data/y_test.pckl
+      md5: b5e41583cd5f02a3ff3363e76290146d
+      size: 37172
+    - path: ../data/y_train.pckl
+      md5: fc76d4efdae50295d1a8a5373aeb74c2
+      size: 146789
+    - path: utils/plot_target.py
+      md5: 58fe1989d4b495f1307e66a671c7eeb7
+      size: 266
+    params:
+      params.yaml:
+        base:
+          DATA_DIR: ../data/
+          KERNEL_NAME: venv
+          UTILS_DIR: ./
+        train:
+          EARLY_STOPPING_MIN_DELTA: 0
+          EARLY_STOPPING_MODE: auto
+          EARLY_STOPPING_MONITOR: val_loss
+          EARLY_STOPPING_PATIENCE: 5
+          EPOCHS: 100
+          MAX_LEN: 20

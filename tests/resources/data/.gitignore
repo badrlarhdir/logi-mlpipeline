@@ -1,0 +1,11 @@
+# Except the .dvc extension files
+!*.dvc
+train_data_cleaning.csv
+model_metrics.png
+/X.pckl
+/X_train.pckl
+/X_test.pckl
+/y.pckl
+/y_train.pckl
+/y_test.pckl
+/counter.pckl

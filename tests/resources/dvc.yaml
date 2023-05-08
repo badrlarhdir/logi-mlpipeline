@@ -1,0 +1,41 @@
+stages:
+  data_preprocess:
+    cmd: papermill ./data_preprocess.ipynb ../outputs/data_preprocess_out.ipynb -p
+      UTILS_DIR ${base.UTILS_DIR} -p DATA_DIR ${base.DATA_DIR} -p DATA_NAME ${data_preprocess.DATA_NAME}
+      -k venv
+    deps:
+    - utils/clean_text.py
+    - utils/counter_word.py
+    - utils/plot_target.py
+    - ../data/train_data_cleaning.csv
+    outs:
+    - ../data/X.pckl
+    - ../data/X_train.pckl
+    - ../data/X_test.pckl
+    - ../data/y.pckl
+    - ../data/y_train.pckl
+    - ../data/y_test.pckl
+    - ../data/counter.pckl
+    params:
+    - base
+    - data_preprocess
+    wdir: notebooks
+  train:
+    cmd: papermill ./train.ipynb ../outputs/train_out.ipynb -p UTILS_DIR ${base.UTILS_DIR}
+      -p DATA_DIR ${base.DATA_DIR} -p MAX_LEN ${train.MAX_LEN} -p EPOCHS ${train.EPOCHS}
+      -p EARLY_STOPPING_MONITOR ${train.EARLY_STOPPING_MONITOR} -p EARLY_STOPPING_MIN_DELTA
+      ${train.EARLY_STOPPING_MIN_DELTA} -p EARLY_STOPPING_PATIENCE ${train.EARLY_STOPPING_PATIENCE}
+      -p EARLY_STOPPING_MODE ${train.EARLY_STOPPING_MODE} -k venv
+    deps:
+    - utils/plot_target.py
+    - ../data/X.pckl
+    - ../data/X_train.pckl
+    - ../data/X_test.pckl
+    - ../data/y.pckl
+    - ../data/y_train.pckl
+    - ../data/y_test.pckl
+    - ../data/counter.pckl
+    params:
+    - base
+    - train
+    wdir: notebooks

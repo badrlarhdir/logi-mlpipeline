@@ -1,0 +1,5 @@
+[core]
+    autostage = true
+    remote = s3-sw-data-mlops-internship
+['remote "s3-sw-data-mlops-internship"']
+    url = s3://sw-data-mlops-internship

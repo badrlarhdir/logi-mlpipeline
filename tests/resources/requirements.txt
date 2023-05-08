@@ -1,0 +1,17 @@
+jupyter
+ipykernel
+dvc
+dvc[s3]
+dvclive
+papermill
+sorcery
+numpy
+pandas
+seaborn
+matplotlib
+nltk
+scikit-learn
+# Already installed during the workflow
+# tensorflow
+pyyaml
+https://github.com/badrlarhdir/mlpipeline/tarball/master
