@@ -1,9 +1,10 @@
-import os
 import json
+import os
 import pathlib
 import shutil
 
-from mlpipeline.globals import PIPELINES_FOLDER, DEFAULT_PIPELINE
+from .globals import DEFAULT_PIPELINE, PIPELINES_FOLDER
+
 
 def delete_pipeline(pipeline: str):
     ''' Delete the chosen pipeline folder and the GHA files

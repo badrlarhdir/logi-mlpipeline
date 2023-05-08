@@ -1,7 +1,8 @@
-import pathlib
 import json
+import pathlib
 
-from mlpipeline.globals import PIPELINES_FOLDER
+from .globals import PIPELINES_FOLDER
+
 
 def link_notebooks_to_pipeline(notebooks: str, pipeline: str):
     ''' Link the notebooks to the selected pipeline

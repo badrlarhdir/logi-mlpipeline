@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-import pathlib
 import json
+import pathlib
 
-from mlpipeline.globals import PIPELINES_FOLDER, DEFAULT_PIPELINE
+from .globals import DEFAULT_PIPELINE, PIPELINES_FOLDER
+
 
 def get_notebooks_from_str(notebooks_str: str) -> list[str]:
     return list(filter(None, notebooks_str.replace("[", "").replace("]", "").replace(" ", "").split(",")))

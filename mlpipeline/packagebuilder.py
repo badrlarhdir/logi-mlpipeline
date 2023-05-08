@@ -5,9 +5,9 @@ import shutil
 
 import yaml
 
-from mlpipeline import pipeline_steps, report_steps
-
 from .globals import PIPELINES_FOLDER
+from .pipelinebuilder import pipeline_steps
+from .reportbuilder import report_steps
 
 
 class PackageBuilder:

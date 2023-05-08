@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-import pathlib
 import json
+import pathlib
 
-from mlpipeline import pipeline_steps, report_steps, setup_package
-from mlpipeline.globals import PIPELINES_FOLDER
+from .globals import PIPELINES_FOLDER
+from .packagebuilder import setup_package
+from .pipelinebuilder import pipeline_steps
+from .reportbuilder import report_steps
+from .utils import get_default_pipeline, get_notebooks_from_str
 
-from .utils import get_notebooks_from_str, get_default_pipeline
 
 def sync_main_project(notebooks: list[str]):
     ''' Creates the required files for the dvc pipeline

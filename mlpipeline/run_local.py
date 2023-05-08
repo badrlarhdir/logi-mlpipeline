@@ -1,9 +1,9 @@
 import subprocess
 
-from mlpipeline.globals import PIPELINES_FOLDER
-
-from .sync import sync_pipeline
 from .default import get_default_pipeline
+from .globals import PIPELINES_FOLDER
+from .sync import sync_pipeline
+
 
 def run_local(pipeline: str):
     ''' Run the dvc pipeline on the main project or on the selected pipeline

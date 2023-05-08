@@ -1,7 +1,8 @@
-import pathlib
 import json
+import pathlib
 
-from mlpipeline.globals import PIPELINES_FOLDER, DEFAULT_PIPELINE
+from .globals import DEFAULT_PIPELINE, PIPELINES_FOLDER
+
 
 def set_default_pipeline(pipeline: str):
     ''' Set the default pipeline to be used when no pipeline is specified

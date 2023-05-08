@@ -1,10 +1,10 @@
+import json
 import os
 import pathlib
-import json
 
-from mlpipeline.globals import PIPELINES_FOLDER, DEFAULT_PIPELINE
-
+from .globals import DEFAULT_PIPELINE, PIPELINES_FOLDER
 from .link import link_notebooks_to_pipeline
+
 
 def create_pipeline(pipeline: str):
     ''' Create a pipeline project folder inside the pipelines folder

@@ -1,6 +1,7 @@
 import os
 
-from mlpipeline.globals import PIPELINES_FOLDER
+from .globals import PIPELINES_FOLDER
+
 
 def show(pipeline: str,):
     ''' Show the pipeline graph in the terminal '''
