@@ -40,7 +40,7 @@ def test_delete_all_uncreated_pipeline():
 
 
 @pipelineEnv("myfirstpipeline")
-def test_delete_uncreated_pipeline():
+def test_delete_created_pipeline():
     """Test the delete command with a pipeline that does not exist"""
 
     runner = CliRunner()
