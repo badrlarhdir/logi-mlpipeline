@@ -22,13 +22,21 @@ class PackageBuilder:
         """Copy the requirements.txt or the setup_env folder from the current directory to the directory
         of the git repository
         """
+        # if the setup_env folder or requirements.txt exists inside the subfolder delete it
+        # first and then copy the new one
+        if pathlib.Path(
+            f"{PIPELINES_FOLDER}/{self.__subfolder}/setup_env"
+        ).exists():
+            shutil.rmtree(f"{PIPELINES_FOLDER}/{self.__subfolder}/setup_env")
+
+        if pathlib.Path(
+            f"{PIPELINES_FOLDER}/{self.__subfolder}/requirements.txt"
+        ).exists():
+            os.remove(
+                f"{PIPELINES_FOLDER}/{self.__subfolder}/requirements.txt"
+            )
+
         if pathlib.Path("./setup_env").exists():
-            if pathlib.Path(
-                f"{PIPELINES_FOLDER}/{self.__subfolder}/setup_env"
-            ).exists():
-                shutil.rmtree(
-                    f"{PIPELINES_FOLDER}/{self.__subfolder}/setup_env"
-                )
             shutil.copytree(
                 "./setup_env",
                 f"{PIPELINES_FOLDER}/{self.__subfolder}/setup_env",
