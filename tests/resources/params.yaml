@@ -1,6 +1,5 @@
 base:
   DATA_DIR: ../data/
-  KERNEL_NAME: venv
   UTILS_DIR: ./
 data_preprocess:
   DATA_NAME: train_data_cleaning.csv

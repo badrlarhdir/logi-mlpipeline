@@ -1,7 +1,6 @@
+# Ignores all data files in the data folder
 # Except the .dvc extension files
-!*.dvc
-train_data_cleaning.csv
-model_metrics.png
+/train_data_cleaning.csv
 /X.pckl
 /X_train.pckl
 /X_test.pckl
@@ -9,3 +8,5 @@ model_metrics.png
 /y_train.pckl
 /y_test.pckl
 /counter.pckl
+/experiment_end.txt
+/model_metrics.png

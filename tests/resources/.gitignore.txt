@@ -130,6 +130,7 @@ dmypy.json
 
 # VirtualEnv folder
 mlpipeline/
+logi-mlpipeline/
 venv/
 
 # Ignore .DS_Store file

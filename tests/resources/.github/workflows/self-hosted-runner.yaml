@@ -1,10 +1,9 @@
 name: Self Hosted Runner ML-pipeline
-'on': 
+'on':
   repository_dispatch:
     types:
-      - mlpipeline
-concurrency: 
-  # Only one workflow run is allowed to run at a time in the repository
+    - mlpipeline-main
+concurrency:
   group: ${{ github.repository }}
   cancel-in-progress: true
 permissions: write-all
@@ -24,14 +23,15 @@ jobs:
         aws-region: ${{ vars.AWS_REGION }}
     - name: Start EC2 runner
       id: start-ec2-runner
-      uses: machulav/ec2-github-runner@v2
+      uses: badrlarhdir/ec2-github-runner@v3
       with:
         mode: start
-        github-token: ${{ github.token }}
+        github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
         ec2-image-id: ${{ vars.EC2_IMAGE_ID }}
         ec2-instance-type: ${{ github.event.client_payload.EC2_INSTANCE_TYPE }}
         subnet-id: ${{ vars.SUBNET_ID }}
         security-group-id: ${{ vars.SECURITY_GROUP_ID }}
+        root-volume-size: ${{ github.event.client_payload.EC2_TARGET_SIZE }}
   pipeline:
     name: Runs the ML Pipeline
     needs: start-runner
@@ -41,7 +41,9 @@ jobs:
     - uses: fregante/setup-git-user@v1
     - name: Echo variables
       run: 'echo "role-to-assume : ${{ vars.ROLE_TO_ASSUME }}" echo "role-session-name:
-        ${{ vars.ROLE_SESSION_NAME }}" echo "aws-region: ${{ vars.AWS_REGION }}" '
+        ${{ vars.ROLE_SESSION_NAME }}" echo "aws-region: ${{ vars.AWS_REGION }}" echo
+        "ec2_instance_type: ${{ github.event.client_payload.EC2_INSTANCE_TYPE }}"
+        echo "ec2_target_size: ${{ github.event.client_payload.EC2_TARGET_SIZE }}" '
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
@@ -66,12 +68,8 @@ jobs:
 
         '
     - name: Install requirements
-      run: 'pip install tensorflow --no-cache-dir
+      run: 'source setup_env/setup_env.sh
 
-        pip install -r requirements.txt
-
-
-        #Install homemade package
 
         #to make papermill work on the created virtualenv
 
@@ -84,9 +82,7 @@ jobs:
         GH_TOKEN: ${{ github.token }}
       run: '# Reproduce pipeline if any changes detected in dependencies
 
-        dvc pull --allow-missing
-
-        dvc repro -f
+        mlp run_local -p main
 
         # Output experiment results
 
@@ -122,9 +118,9 @@ jobs:
         role-session-name: ${{ vars.ROLE_SESSION_NAME }}
         aws-region: ${{ vars.AWS_REGION }}
     - name: Stop EC2 runner
-      uses: machulav/ec2-github-runner@v2
+      uses: badrlarhdir/ec2-github-runner@v3
       with:
         mode: stop
-        github-token: ${{ github.token }}
+        github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
         label: ${{ needs.start-runner.outputs.label }}
         ec2-instance-id: ${{ needs.start-runner.outputs.ec2-instance-id }}

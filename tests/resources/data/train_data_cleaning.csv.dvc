@@ -1,3 +1,10 @@
+md5: 1ae816209cdf5e4de6d679fa6839055b
+frozen: true
+deps:
+- etag: 56eed158bd29bd1998e1889bec48a0dc
+  size: 920146
+  version_id: _nOrqPYi_l23h8qXUywryS7YXXDXi8EP
+  path: s3://sw-data-mlops-internship/train_data_cleaning.csv
 outs:
 - md5: 56eed158bd29bd1998e1889bec48a0dc
   size: 920146

@@ -4,9 +4,7 @@ stages:
       UTILS_DIR ${base.UTILS_DIR} -p DATA_DIR ${base.DATA_DIR} -p DATA_NAME ${data_preprocess.DATA_NAME}
       -k venv
     deps:
-    - utils/clean_text.py
-    - utils/counter_word.py
-    - utils/plot_target.py
+    - utils
     - ../data/train_data_cleaning.csv
     outs:
     - ../data/X.pckl
@@ -27,7 +25,7 @@ stages:
       ${train.EARLY_STOPPING_MIN_DELTA} -p EARLY_STOPPING_PATIENCE ${train.EARLY_STOPPING_PATIENCE}
       -p EARLY_STOPPING_MODE ${train.EARLY_STOPPING_MODE} -k venv
     deps:
-    - utils/plot_target.py
+    - utils
     - ../data/X.pckl
     - ../data/X_train.pckl
     - ../data/X_test.pckl
@@ -35,7 +33,15 @@ stages:
     - ../data/y_train.pckl
     - ../data/y_test.pckl
     - ../data/counter.pckl
+    outs:
+    - ../data/experiment_end.txt
+    - ../data/model_metrics.png
     params:
     - base
     - train
+    wdir: notebooks
+  upload_to_s3:
+    cmd: papermill ./upload_to_s3.ipynb ../outputs/upload_to_s3_out.ipynb -k venv
+    deps:
+    - ../data/experiment_end.txt
     wdir: notebooks
