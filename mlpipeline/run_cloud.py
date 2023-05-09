@@ -66,6 +66,8 @@ def run_cloud(pipeline: str, instance_type: str, ec2_target_size: int):
     if not pipeline:
         # Run the default pipeline
         pipeline = get_default_pipeline()
+        if not pipeline:
+            return
 
     if not instance_type:
         instance_type = "t2.micro"
