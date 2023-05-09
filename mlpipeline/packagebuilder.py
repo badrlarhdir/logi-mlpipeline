@@ -87,50 +87,73 @@ class PackageBuilder:
                 if "data" not in dep:
                     unique_deps.add(dep)
 
+        # TODO: clean this up for better readability
         for dep in unique_deps:
-            # get the name of the dependency
-            dep_name = dep.split("/")[-1]
-            # get the url of the dependency
-            split_url = dep.split("/")
-            del split_url[-1]
-            dep_url = "/".join(split_url)
+            # if the dependency has a . inside of it, it is a file
+            if os.path.isfile(dep) or os.path.isfile(f"./notebooks/{dep}"):
+                # get the name of the dependency
+                dep_name = dep.split("/")[-1]
+                # get the url of the dependency
+                split_url = dep.split("/")
+                del split_url[-1]
+                dep_url = "/".join(split_url)
 
-            # TODO: Check if it is possible to have dependencies outside the notebooks folder
+                # if the dependency doesn't starts with .. it means that it is inside the notebooks folder
+                if not dep.startswith(".."):
+                    dep = f"./notebooks/{dep}"
 
-            # if the dependency doesn't starts with .. it means that it is inside the notebooks folder
-            if not dep.startswith(".."):
-                dep = f"./notebooks/{dep}"
-
-                # create the folder
-                os.makedirs(
-                    os.getcwd()
-                    + "/"
-                    + f"{PIPELINES_FOLDER}/{self.__subfolder}/notebooks/{dep_url}",
-                    exist_ok=True,
-                )
-                # copy the dependency
-                shutil.copy(
-                    dep,
-                    os.getcwd()
-                    + "/"
-                    + f"{PIPELINES_FOLDER}/{self.__subfolder}/notebooks/{dep_url}/{dep_name}",
-                )
+                    # create the folder
+                    os.makedirs(
+                        os.getcwd()
+                        + "/"
+                        + f"{PIPELINES_FOLDER}/{self.__subfolder}/notebooks/{dep_url}",
+                        exist_ok=True,
+                    )
+                    # copy the dependency
+                    shutil.copy(
+                        dep,
+                        os.getcwd()
+                        + "/"
+                        + f"{PIPELINES_FOLDER}/{self.__subfolder}/notebooks/{dep_url}/{dep_name}",
+                    )
+                else:
+                    # remove the first two dots
+                    dep_url = dep_url[3:]
+                    dep = dep[3:]
+                    os.makedirs(
+                        os.getcwd()
+                        + "/"
+                        + f"{PIPELINES_FOLDER}/{self.__subfolder}/{dep_url}",
+                        exist_ok=True,
+                    )
+                    shutil.copy(
+                        dep,
+                        os.getcwd()
+                        + "/"
+                        + f"{PIPELINES_FOLDER}/{self.__subfolder}/{dep_url}/{dep_name}",
+                    )
             else:
-                # remove the first two dots
-                dep_url = dep_url[3:]
-                dep = dep[3:]
-                os.makedirs(
-                    os.getcwd()
-                    + "/"
-                    + f"{PIPELINES_FOLDER}/{self.__subfolder}/{dep_url}",
-                    exist_ok=True,
-                )
-                shutil.copy(
-                    dep,
-                    os.getcwd()
-                    + "/"
-                    + f"{PIPELINES_FOLDER}/{self.__subfolder}/{dep_url}/{dep_name}",
-                )
+                # if the dependency doesn't starts with .. it means that it is inside the notebooks folder
+                if not dep.startswith(".."):
+                    dep = f"./notebooks/{dep}"
+                    # copy the folder to the pipeline folder
+                    shutil.copytree(
+                        dep,
+                        os.getcwd()
+                        + "/"
+                        + f"{PIPELINES_FOLDER}/{self.__subfolder}/{dep}",
+                        dirs_exist_ok=True,
+                    )
+                else:
+                    # remove the first two dots
+                    dep = dep[3:]
+                    shutil.copytree(
+                        dep,
+                        os.getcwd()
+                        + "/"
+                        + f"{PIPELINES_FOLDER}/{self.__subfolder}/{dep}",
+                        dirs_exist_ok=True,
+                    )
 
             print("Copied dependency: " + dep)
 

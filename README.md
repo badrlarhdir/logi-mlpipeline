@@ -1,57 +1,95 @@
-![build](https://github.com/sotetsuk/python-template/workflows/build/badge.svg)
 
-# python-template
+## MLPipeline package
 
-Python package and CLI template available on both PyCharm and Visual Studio Code (VSCode)
+###  Initialize a project
 
-## Features
-
-|                                |   PyCharm   |   VSCode    | Commands            |
-| :----------------------------- | :---------: | :---------: | :------------------ |
-| Type check                     | via PyCharm | via Pylance | `make check`        |
-| Format/Check (**black/isort**) |      ✔      |      ✔      | `make format/check` |
-| Test (**pytest/doctest**)      |      ✔      |      ✔      | `make test`         |
-
-## Usage
-
-1. Click `Use this template` in [github.com/sotetsuk/python-template](https://github.com/sotetsuk/python-template)
-2. Write up `setup.py`
-   - If you do not create CLI, please remove `entry_points`
-3. Rename Python package name following the instruction below
-4. For CLI usage, please rename command name folowing the instruction below
-5. Attach new CI badge
-6. Attach new License
-
-### Rename `mlpipeline` to your package name
+You can initialize a project by running:
 
 ```sh
-$ export PKG_NAME=<YOUR PACKAGE NAME>
-$ git mv mlpipeline ${PKG_NAME}
-$ for f in $(git grep mlpipeline | cut -d ":" -f 1); do sed -i "" -e "s/mlpipeline/${PKG_NAME}/" ${f} ; done
+mlp init
 ```
 
-### Rename `mlp` to your command name
+### Sync & update the dvc files in main project
+
+The ML pipeline in the main project can be synced (intializing or updating the dvc files inside the root directory) by running:
 
 ```sh
-$ export CMD_NAME=<YOUR COMMAND NAME>
-$ for f in $(git grep mycmd | cut -d ":" -f 1); do sed -i "" -e "s/mycmd/${PKG_NAME}/" ${f} ; done
+mlp sync -n "[notebooks/data_preprocess.ipynb, notebooks/train.ipynb]"
 ```
 
-## Interpreter settings
+### Create a pipeline
 
-This project uses virtualenv in `<repo-root>/venv`. Please initialize it if not exists.
+A new pipeline can be created by running:
 
-- **PyCharm**: `Preferences` => `Python Interpreter` => `Add`
-  - [Configure a Python interpreter - Help | PyCharm](https://www.jetbrains.com/help/pycharm/configuring-python-interpreter.html)
-- **VSCode**: Manually prepare it or run `$ make venv`
+```sh
+mlp create -p "myfirstpipeline"
+```
 
-## Run all tests
+### Link notebooks to a pipeline
 
-- **PyCharm**: [Run tests - Help | PyCharm](https://www.jetbrains.com/help/pycharm/performing-tests.html)
-  - Add `pytest`
-  - `Script path`: `<project-root>/<your pkg name>`
-  - `Parameters`: `--doctest-modules`
-- **VSCode**: [Python testing in Visual Studio Code](https://code.visualstudio.com/docs/python/testing)
+To link a list of notebooks for a specific pipeline:
+
+```sh
+mlp link -p "myfirstpipeline" -n "[notebooks/data_preprocess.ipynb, notebooks/train.ipynb]"
+```
+
+**NOTE**: If you already know the list of notebooks to link as you create the pipeline you can directly run the command:
+
+```sh
+mlp create -p "myfirstpipeline" -n "[notebooks/data_preprocess.ipynb, notebooks/train.ipynb]"
+```
+
+### Sync & package a pipeline
+
+The ML pipeline can be packaged into it's own git repository using the following command:
+
+```sh
+mlp sync -p "myfirstpipeline"
+```
+
+### Pipelines list
+
+To display the list of all created pipelines:
+
+```sh
+mlp list
+```
+
+### Delete a pipeline
+
+To delete a pipeline from the pipeline registry:
+
+```sh
+mlp delete -p "myfirstpipeline"
+```
+
+It is also possible to delete all pipelines created from the registry:
+
+```sh
+mlp delete  --all or -a
+```
+### Publishing a pipeline or project
+
+To publish a pipeline you can run the following command:
+```sh
+mlp publish -p "myfirstpipeline" -m "Message of the publish event"
+```
+
+To publish a complete project you can run:
+
+```sh
+mlp publish  -m "Message of the publish event"
+```
+
+
+### Run in the cloud
+
+To execute your pipeline in the cloud:
+```sh
+mlp run_cloud -p "myfirstpipeline" -i c6in.xlarge -s 150
+```
+
+The instance type "-i" and the size "-s" is optional and has default values of respectively t2.micro and 30 G.
 
 ## License
 
