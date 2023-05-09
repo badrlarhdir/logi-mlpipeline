@@ -122,7 +122,7 @@ class ReportBuilder:
                 data_self_hosted_runner["jobs"]["pipeline"]["steps"][
                     index_requirements
                 ]["run"] = (
-                    "pip install -r requirements.txt\n"
+                    "pip install --no-cache-dir -r requirements.txt\n"
                     if not pathlib.Path("./setup_env").exists()
                     else "source setup_env/setup_env.sh\n"
                 )
