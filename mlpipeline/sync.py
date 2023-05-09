@@ -11,39 +11,41 @@ from .utils import get_default_pipeline, get_notebooks_from_str
 
 
 def sync_main_project(notebooks: list[str]):
-    ''' Creates the required files for the dvc pipeline
-        ----------
-        notebooks:  list[str]
-            list of the notebooks
-    '''
+    """Creates the required files for the dvc pipeline
+    ----------
+    notebooks:  list[str]
+        list of the notebooks
+    """
 
     pipeline_steps(notebooks)
     report_steps(notebooks)
     print("Project synced")
 
+
 def sync_pipeline_project(notebooks: list[str], subfolder: str):
-    ''' Copy the notebooks, requirements, data, dependencies, and gitignore files to the git repo
-        Parameters
-        ----------
-        notebooks:  list[str]
-            list of the notebooks
-    '''
+    """Copy the notebooks, requirements, data, dependencies, and gitignore files to the git repo
+    Parameters
+    ----------
+    notebooks:  list[str]
+        list of the notebooks
+    """
 
     sync_main_project(notebooks)
     setup_package(notebooks, subfolder)
 
+
 def sync_pipeline(pipeline: str):
-    ''' Sync the notebooks of the selected pipeline
-        Parameters
-        ----------
-        pipeline:  str
-            name of the pipeline
-    '''
+    """Sync the notebooks of the selected pipeline
+    Parameters
+    ----------
+    pipeline:  str
+        name of the pipeline
+    """
 
     # Get the notebooks from the pipelines.json file
     pipelines_path = f"{PIPELINES_FOLDER}/pipelines.json"
     if pathlib.Path(pipelines_path).exists():
-        with open(pipelines_path, 'r') as pipelines_f:
+        with open(pipelines_path, "r") as pipelines_f:
             pipelines = json.load(pipelines_f)
             if pipeline not in pipelines:
                 print("Pipeline not found")
@@ -55,7 +57,7 @@ def sync_pipeline(pipeline: str):
             if not notebooks:
                 print("No notebooks found for this pipeline")
                 return
-            # Package the pipeline project 
+            # Package the pipeline project
             sync_pipeline_project(notebooks, pipeline)
     else:
         print("No pipelines found")
@@ -63,20 +65,21 @@ def sync_pipeline(pipeline: str):
 
     print(f"Pipeline {pipeline} synced")
 
+
 def sync(notebooks: str, pipeline: str):
-    '''Sync the notebooks with the pipeline project or the main project
+    """Sync the notebooks with the pipeline project or the main project
 
     Parameters
         (optional) notebooks (str): list of notebooks in the pipeline
         (optional) pipeline (str): name of the pipeline
-    '''
+    """
 
     if pipeline:
-        print('Syncing pipeline', pipeline, '...')
+        print("Syncing pipeline", pipeline, "...")
         sync_pipeline(pipeline)
         return
     if notebooks:
-        print('Syncing notebooks on main project', notebooks, '...')
+        print("Syncing notebooks on main project", notebooks, "...")
         notebooks = get_notebooks_from_str(notebooks)
         sync_main_project(notebooks)
         return
@@ -85,7 +88,7 @@ def sync(notebooks: str, pipeline: str):
     if not notebooks and not pipeline:
         pipeline = get_default_pipeline()
         if pipeline:
-            print('Syncing pipeline', pipeline, '...')
+            print("Syncing pipeline", pipeline, "...")
             sync_pipeline(pipeline)
             return
 

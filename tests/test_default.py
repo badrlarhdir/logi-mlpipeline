@@ -11,78 +11,88 @@ from .globals import EXIT_CODE_CLICK_ERROR, EXIT_CODE_SUCCESS
 
 # ----------------------------- Clean Environment ---------------------------- #
 
+
 @cleanEnv
 def test_default():
-    ''' Test the default command without any pipeline '''
+    """Test the default command without any pipeline"""
 
     runner = CliRunner()
-    result = runner.invoke(cli, ['default'])
+    result = runner.invoke(cli, ["default"])
 
     assert result.exit_code == EXIT_CODE_CLICK_ERROR
     assert "Error: Missing option '--pipeline' / '-p'." in result.output
 
+
 @cleanEnv
 def test_default_no_pipeline():
-    ''' Test the default command when no pipeline exists '''
+    """Test the default command when no pipeline exists"""
 
     runner = CliRunner()
-    result = runner.invoke(cli, ['default', '-p', 'myfirstpipeline'])
+    result = runner.invoke(cli, ["default", "-p", "myfirstpipeline"])
 
     assert result.exit_code == EXIT_CODE_SUCCESS
-    assert 'Pipeline myfirstpipeline does not exist' in result.output
+    assert "Pipeline myfirstpipeline does not exist" in result.output
 
 
 # ----------------------------- Pipeline Created ----------------------------- #
 
-@pipelineEnv('myfirstpipeline')
+
+@pipelineEnv("myfirstpipeline")
 def test_default_with_1_pipeline():
-    ''' Test the create command with a pipeline that does exist '''
+    """Test the create command with a pipeline that does exist"""
 
     runner = CliRunner()
-    result = runner.invoke(cli, ['default', '-p', 'myfirstpipeline'])
+    result = runner.invoke(cli, ["default", "-p", "myfirstpipeline"])
 
     assert result.exit_code == EXIT_CODE_SUCCESS
-    assert 'Pipeline myfirstpipeline set as default' in result.output
+    assert "Pipeline myfirstpipeline set as default" in result.output
 
-@pipelineEnv('myfirstpipeline', 'mysecondpipeline', 'mythirdpipeline')
+
+@pipelineEnv("myfirstpipeline", "mysecondpipeline", "mythirdpipeline")
 def test_default_with_3_pipelines():
-    ''' Test the default pipeline command on a environment with 3 pipelines '''
+    """Test the default pipeline command on a environment with 3 pipelines"""
 
     runner = CliRunner()
-    result = runner.invoke(cli, ['default', '-p', 'mysecondpipeline'])
+    result = runner.invoke(cli, ["default", "-p", "mysecondpipeline"])
 
     assert result.exit_code == EXIT_CODE_SUCCESS
-    assert 'Pipeline mysecondpipeline set as default' in result.output
+    assert "Pipeline mysecondpipeline set as default" in result.output
 
-    result = runner.invoke(cli, ['list'])
+    result = runner.invoke(cli, ["list"])
 
     assert result.exit_code == EXIT_CODE_SUCCESS
-    assert '[Default] Pipeline: mysecondpipeline,' in result.output
+    assert "[Default] Pipeline: mysecondpipeline," in result.output
 
-@pipelineEnv('myfirstpipeline', 'mysecondpipeline', 'mythirdpipeline')
+
+@pipelineEnv("myfirstpipeline", "mysecondpipeline", "mythirdpipeline")
 def test_default_with_3_pipelines_last_pipeline_default():
-    ''' Test that the default pipeline is the last one initialized '''
+    """Test that the default pipeline is the last one initialized"""
 
     runner = CliRunner()
-    result = runner.invoke(cli, ['list'])
+    result = runner.invoke(cli, ["list"])
 
     assert result.exit_code == EXIT_CODE_SUCCESS
-    assert '[Default] Pipeline: mythirdpipeline,' in result.output
+    assert "[Default] Pipeline: mythirdpipeline," in result.output
 
 
-@pipelineEnv('myfirstpipeline', 'mysecondpipeline', 'mythirdpipeline', 'myfourthpipeline')
+@pipelineEnv(
+    "myfirstpipeline",
+    "mysecondpipeline",
+    "mythirdpipeline",
+    "myfourthpipeline",
+)
 def test_default_with_4_pipelines_after_removing_last_created():
-    ''' Test that the default is not always available in the list of pipelines '''
+    """Test that the default is not always available in the list of pipelines"""
 
     runner = CliRunner()
-    result = runner.invoke(cli, ['delete', '-p', 'myfourthpipeline'])
+    result = runner.invoke(cli, ["delete", "-p", "myfourthpipeline"])
 
     assert result.exit_code == EXIT_CODE_SUCCESS
-    assert 'Pipeline myfourthpipeline deleted' in result.output
+    assert "Pipeline myfourthpipeline deleted" in result.output
 
-    result = runner.invoke(cli, ['list'])
+    result = runner.invoke(cli, ["list"])
 
     assert result.exit_code == EXIT_CODE_SUCCESS
-    assert 'Pipeline: myfirstpipeline,' in result.output
-    assert 'Pipeline: mysecondpipeline,' in result.output
-    assert 'Pipeline: mythirdpipeline,' in result.output
+    assert "Pipeline: myfirstpipeline," in result.output
+    assert "Pipeline: mysecondpipeline," in result.output
+    assert "Pipeline: mythirdpipeline," in result.output

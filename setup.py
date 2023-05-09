@@ -21,7 +21,7 @@ setup(
         "pyyaml",
         "boto3",
         "requests",
-        "tabulate"
+        "tabulate",
     ],
     packages=find_packages(),
     entry_points={"console_scripts": "mlp = mlpipeline.cli:cli"},

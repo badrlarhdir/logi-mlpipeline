@@ -13,26 +13,40 @@ from .globals import EXIT_CODE_SUCCESS
 
 # ----------------------------- Clean Environment ---------------------------- #
 
+
 @cleanEnv
 def test_create_new_pipeline():
-    ''' Test the create command with a pipeline that does not exist '''
+    """Test the create command with a pipeline that does not exist"""
 
     runner = CliRunner()
-    result = runner.invoke(cli, ['create', '-p', 'myfirstpipeline'])
+    result = runner.invoke(cli, ["create", "-p", "myfirstpipeline"])
 
     assert result.exit_code == EXIT_CODE_SUCCESS
-    assert 'Pipeline myfirstpipeline created' in result.output
+    assert "Pipeline myfirstpipeline created" in result.output
+
 
 @cleanEnv
 def test_create_new_pipeline_with_notebook_links():
-    ''' Test the create command with a pipeline that does not exist with notebook links'''
+    """Test the create command with a pipeline that does not exist with notebook links"""
 
     runner = CliRunner()
-    result = runner.invoke(cli, ['create', '-p', 'myfirstpipeline', '-n', '[notebooks/data_preprocess.ipynb, notebooks/train.ipynb]'])
+    result = runner.invoke(
+        cli,
+        [
+            "create",
+            "-p",
+            "myfirstpipeline",
+            "-n",
+            "[notebooks/data_preprocess.ipynb, notebooks/train.ipynb]",
+        ],
+    )
 
     assert result.exit_code == EXIT_CODE_SUCCESS
-    assert 'Pipeline myfirstpipeline created' in result.output
-    assert 'Notebooks [notebooks/data_preprocess.ipynb, notebooks/train.ipynb] linked to pipeline myfirstpipeline' in result.output
+    assert "Pipeline myfirstpipeline created" in result.output
+    assert (
+        "Notebooks [notebooks/data_preprocess.ipynb, notebooks/train.ipynb] linked to pipeline myfirstpipeline"
+        in result.output
+    )
 
     assert pathlib.Path("pipelines").exists()
     assert pathlib.Path("pipelines/myfirstpipeline").exists()
@@ -42,14 +56,16 @@ def test_create_new_pipeline_with_notebook_links():
     assert pathlib.Path("notebooks/data_preprocess.ipynb").exists()
     assert pathlib.Path("notebooks/train.ipynb").exists()
 
+
 # ----------------------------- Pipeline Created ----------------------------- #
 
-@pipelineEnv('myfirstpipeline')
+
+@pipelineEnv("myfirstpipeline")
 def test_create_pipeline_that_already_exists():
-    ''' Test the create command with a pipeline that does exist '''
+    """Test the create command with a pipeline that does exist"""
 
     runner = CliRunner()
-    result = runner.invoke(cli, ['create', '-p', 'myfirstpipeline'])
+    result = runner.invoke(cli, ["create", "-p", "myfirstpipeline"])
 
     assert result.exit_code == EXIT_CODE_SUCCESS
-    assert 'Pipeline myfirstpipeline already exists' in result.output
+    assert "Pipeline myfirstpipeline already exists" in result.output

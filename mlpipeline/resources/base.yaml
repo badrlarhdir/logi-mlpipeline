@@ -66,7 +66,6 @@ jobs:
           source venv/bin/activate
       - name: Install requirements
         run: |
-          pip install tensorflow --no-cache-dir
           pip install -r requirements.txt
 
           #to make papermill work on the created virtualenv
