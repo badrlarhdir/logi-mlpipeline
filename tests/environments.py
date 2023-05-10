@@ -12,89 +12,76 @@ from mlpipeline.globals import PIPELINES_FOLDER
 
 RESOURCES_FOLDER = "tests/resources"
 
-
-def init_dvc_env_folders(folder_name: str):
-    """Initialize a simple example with the specified folder name
-
-    Parameters
-    ----------
-    folder_name : str
-        The folder name
-    """
-    # check if folder_name is a list
-    if isinstance(folder_name, list):
-        for folder in folder_name:
-            init_dvc_env_folders(folder)
-    else:
-        if pathlib.Path(folder_name).exists():
-            shutil.rmtree(folder_name)
-        if pathlib.Path(f"{RESOURCES_FOLDER}/{folder_name}").exists():
-            shutil.copytree(
-                f"{RESOURCES_FOLDER}/{folder_name}", f"./{folder_name}"
-            )
+# ---------------------------------------------------------------------------- #
+#                       Functions used for the decorators                      #
+# ---------------------------------------------------------------------------- #
 
 
-def init_dvc_env_files(file_name: str):
-    """Initialize a simple example with the specified file name
+def init_dvc_env(type, f_name: str | list[str]):
+    """Initialize a simple example with the specified folder or file name
 
     Parameters
     ----------
-    file_name : str
-        The file name
+    type : str
+        The type of the file to delete, either "folder" or "file"
+    f_name : str | list[str]
+        The folder or file name
     """
-    # check if file_name is a list
-    if isinstance(file_name, list):
-        for file in file_name:
-            init_dvc_env_files(file)
-    else:
-        if pathlib.Path(file_name).exists():
-            os.remove(file_name)
-        if pathlib.Path(f"{RESOURCES_FOLDER}/{file_name}").exists():
-            shutil.copy(f"{RESOURCES_FOLDER}/{file_name}", f"./{file_name}")
+    if type == "folder":
+        # check if folder_name is a list
+        if isinstance(f_name, list):
+            for folder in f_name:
+                init_dvc_env("folder", folder)
+        else:
+            if pathlib.Path(f_name).exists():
+                shutil.rmtree(f_name)
+            if pathlib.Path(f"{RESOURCES_FOLDER}/{f_name}").exists():
+                shutil.copytree(f"{RESOURCES_FOLDER}/{f_name}", f"./{f_name}")
+
+    if type == "file":
+        if isinstance(f_name, list):
+            for file in f_name:
+                init_dvc_env("file", file)
+        else:
+            if pathlib.Path(f_name).exists():
+                os.remove(f_name)
+            if pathlib.Path(f"{RESOURCES_FOLDER}/{f_name}").exists():
+                shutil.copy(f"{RESOURCES_FOLDER}/{f_name}", f"./{f_name}")
 
 
-def delete_dvc_env_folders(folder_name: str):
-    """Delete a file with the specified folder name
+def delete_dvc_env(type, f_name: str | list[str]):
+    """Deletes a file with the specified folder or file name
 
     Parameters
     ----------
-    folder_name : str
-        The folder name
+    type : str
+        The type of the file to delete, either "folder" or "file"
+    f_name : str | list[str]
+        The folder or file name
     """
-    # check if folder_name is a list
-    if isinstance(folder_name, list):
-        for folder in folder_name:
-            delete_dvc_env_folders(folder)
-    else:
-        if pathlib.Path(folder_name).exists():
-            shutil.rmtree(folder_name)
+    if type == "folder":
+        # check if folder_name is a list
+        if isinstance(f_name, list):
+            for folder in f_name:
+                delete_dvc_env("folder", folder)
+        else:
+            if pathlib.Path(f_name).exists():
+                shutil.rmtree(f_name)
 
-
-def delete_dvc_env_files(file_name: str):
-    """Delete a file with the specified file name
-
-    Parameters
-    ----------
-    file_name : str
-        The file name
-    """
-    # check if file_name is a list
-    if isinstance(file_name, list):
-        for file in file_name:
-            delete_dvc_env_files(file)
-    else:
-        if pathlib.Path(file_name).exists():
-            os.remove(file_name)
+    if type == "file":
+        if isinstance(f_name, list):
+            for file in f_name:
+                delete_dvc_env("file", file)
+        else:
+            if pathlib.Path(f_name).exists():
+                os.remove(f_name)
 
 
 def empty_environment():
     """Empty the environment from any previous test"""
 
-    # No .github/workflows folder, no .dvc folder, no params.yaml, no dvc.yaml, no requirements.txt, no dvc.lock
-    # no notebooks folder, no data folder, no outputs folder, no .dvcignore
-    # no pipelines folder
-
-    delete_dvc_env_folders(
+    delete_dvc_env(
+        "folder",
         [
             ".dvc",
             "notebooks",
@@ -102,66 +89,42 @@ def empty_environment():
             "outputs",
             PIPELINES_FOLDER,
             ".github/workflows",
-        ]
+        ],
     )
-    delete_dvc_env_files(
+    delete_dvc_env(
+        "file",
         [
             "dvc.yaml",
             "params.yaml",
             ".dvcignore",
             "dvc.lock",
             "requirements.txt",
-        ]
+        ],
     )
 
 
-def emptyEnv(func: callable):
-    """Decorator to clean the environment from any previous test
-    and to clean the environment after the test
-    """
-
-    def wrapper(*args, **kwargs):
-        empty_environment()
-
-        result = func(*args, **kwargs)
-
-        empty_environment()
-        return result
-
-    return wrapper
-
-
-def initialize_env(status: str):
+def initialize_env(
+    status: str,
+    missing_folders: list[str] = [],
+    missing_files: list[str] = [],
+):
     """Clean the environment from any previous test"""
 
-    # Delete the pipelines folders if exists
+    init_env_folders = [".dvc", "notebooks", ".github/", "data", "outputs"]
+    init_env_files = [
+        "dvc.yaml",
+        "params.yaml",
+        ".dvcignore",
+        "dvc.lock",
+        "requirements.txt",
+    ]
     if status == "start":
-        init_dvc_env_folders(
-            [".dvc", "notebooks", ".github/", "data", "outputs"]
-        )
-        init_dvc_env_files(
-            [
-                "dvc.yaml",
-                "params.yaml",
-                ".dvcignore",
-                "dvc.lock",
-                "requirements.txt",
-            ]
-        )
+        init_dvc_env("folder", init_env_folders)
+        init_dvc_env("file", init_env_files)
 
     if status == "end":
-        delete_dvc_env_folders(
-            [".dvc", "notebooks", ".github/", "data", "outputs"]
-        )
-        delete_dvc_env_files(
-            [
-                "dvc.yaml",
-                "params.yaml",
-                ".dvcignore",
-                "dvc.lock",
-                "requirements.txt",
-            ]
-        )
+        delete_dvc_env("folder", init_env_folders)
+        delete_dvc_env("file", init_env_files)
 
     if pathlib.Path(PIPELINES_FOLDER).exists():
         shutil.rmtree(PIPELINES_FOLDER)
@@ -171,50 +134,6 @@ def initialize_env(status: str):
         for file in os.listdir(".github/workflows"):
             if file.endswith("-self-hosted-runner.yaml"):
                 os.remove(f".github/workflows/{file}")
-
-
-def initializedEnv(func: callable):
-    """Decorator to clean the environment from any previous test
-    and to clean the environment after the test
-    """
-
-    def wrapper(*args, **kwargs):
-        initialize_env("start")
-
-        result = func(*args, **kwargs)
-
-        initialize_env("end")
-        return result
-
-    return wrapper
-
-
-def pipelineEnv(*pipelines: Tuple[str, ...]):
-    """Decorator to create a pipeline environment before the test
-    and to clean the environment after the test
-
-    Parameters
-    ----------
-    *pipelines : Tuple[str, ...]
-        The names of the pipelines to create
-    """
-
-    def actual_decorator(func: callable):
-        def wrapper(*args, **kwargs):
-            initialize_env("start")
-
-            runner = CliRunner()
-            for pipeline in pipelines:
-                result = runner.invoke(cli, ["create", "-p", pipeline])
-
-            result = func(*args, **kwargs)
-
-            initialize_env("end")
-            return result
-
-        return wrapper
-
-    return actual_decorator
 
 
 def initialize_data(data: list[str]):
@@ -238,6 +157,71 @@ def initialize_notebooks():
         )
 
 
+# ---------------------------------------------------------------------------- #
+#                            Environment Decorators                            #
+# ---------------------------------------------------------------------------- #
+
+
+def emptyEnv(func):
+    """Decorator to clean the environment from any previous test
+    and to clean the environment after the test
+    """
+
+    def wrapper(*args, **kwargs):
+        empty_environment()
+
+        result = func(*args, **kwargs)
+
+        empty_environment()
+        return result
+
+    return wrapper
+
+
+def initializedEnv(func):
+    """Decorator to clean the environment from any previous test
+    and to clean the environment after the test
+    """
+
+    def wrapper(*args, **kwargs):
+        initialize_env("start")
+
+        result = func(*args, **kwargs)
+
+        initialize_env("end")
+        return result
+
+    return wrapper
+
+
+def pipelineEnv(*pipelines: str):
+    """Decorator to create a pipeline environment before the test
+    and to clean the environment after the test
+
+    Parameters
+    ----------
+    *pipelines : Tuple[str, ...]
+        The names of the pipelines to create
+    """
+
+    def actual_decorator(func):
+        def wrapper(*args, **kwargs):
+            initialize_env("start")
+
+            runner = CliRunner()
+            for pipeline in pipelines:
+                result = runner.invoke(cli, ["create", "-p", pipeline])
+
+            result = func(*args, **kwargs)
+
+            initialize_env("end")
+            return result
+
+        return wrapper
+
+    return actual_decorator
+
+
 def linkedPipelineEnv(pipeline: str, notebooks: str, data: list[str]):
     """Decorator to create a pipeline environment linked to specified notebooks
     before the test and to clean the environment after the test
@@ -252,7 +236,7 @@ def linkedPipelineEnv(pipeline: str, notebooks: str, data: list[str]):
         List of Names of the data to link with the pipeline
     """
 
-    def actual_decorator(func: callable):
+    def actual_decorator(func):
         def wrapper(*args, **kwargs):
             runner = CliRunner()
 
