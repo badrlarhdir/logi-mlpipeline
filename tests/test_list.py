@@ -26,7 +26,13 @@ def test_list_init_env():
 # ----------------------------- Pipeline Created ----------------------------- #
 
 
-@pipelineEnv("myfirstpipeline")
+@pipelineEnv(
+    {
+        "missing_folders": [],
+        "missing_files": [],
+    },
+    "myfirstpipeline",
+)
 def test_list_with_1_existing_pipeline():
     """Test the sync commands with a pipeline that exists"""
 
@@ -37,7 +43,15 @@ def test_list_with_1_existing_pipeline():
     assert "Pipeline: myfirstpipeline" in result.output
 
 
-@pipelineEnv("myfirstpipeline", "mysecondpipeline", "mythirdpipeline")
+@pipelineEnv(
+    {
+        "missing_folders": [],
+        "missing_files": [],
+    },
+    "myfirstpipeline",
+    "mysecondpipeline",
+    "mythirdpipeline",
+)
 def test_list_with_3_existing_pipeline():
     """Test the sync commands with three pipelines that exist"""
 

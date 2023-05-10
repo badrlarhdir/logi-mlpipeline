@@ -46,7 +46,13 @@ def test_link_uncreated_pipeline_with_notebooks_argument():
 # ----------------------------- Pipeline Created ----------------------------- #
 
 
-@pipelineEnv("myfirstpipeline")
+@pipelineEnv(
+    {
+        "missing_folders": [],
+        "missing_files": [],
+    },
+    "myfirstpipeline",
+)
 def test_link_pipeline_with_missing_notebooks_argument():
     """Test the link command with a create pipeline but no arguments"""
 
@@ -57,7 +63,13 @@ def test_link_pipeline_with_missing_notebooks_argument():
     assert "Error: Missing option '--notebooks' / '-n'." in result.output
 
 
-@pipelineEnv("myfirstpipeline")
+@pipelineEnv(
+    {
+        "missing_folders": [],
+        "missing_files": [],
+    },
+    "myfirstpipeline",
+)
 def test_link_pipeline_with_notebooks_argument():
     """Test the link command with a create pipeline and a list of notebooks"""
 

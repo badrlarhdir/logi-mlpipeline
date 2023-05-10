@@ -4,7 +4,7 @@ from click.testing import CliRunner
 
 from mlpipeline.cli import cli
 
-from .environments import initializedEnv, linkedPipelineEnv, pipelineEnv
+from .environments import initializedEnv, pipelineEnv, pipelineLinkedEnv
 from .globals import EXIT_CODE_SUCCESS
 
 # ---------------------------------------------------------------------------- #
@@ -31,7 +31,7 @@ def test_run_init_env():
 # ----------------------------- Pipeline Created ----------------------------- #
 
 
-@linkedPipelineEnv(
+@pipelineLinkedEnv(
     "myfirstpipeline",
     "[notebooks/data_preprocess.ipynb, notebooks/train.ipynb, notebooks/upload_to_s3.ipynb]",
     ["train_data_cleaning.csv.dvc"],
@@ -49,7 +49,15 @@ def test_run_with_1_linked_pipeline():
     assert "Pipeline myfirstpipeline ran successfully" in result.output
 
 
-@pipelineEnv("myfirstpipeline", "mysecondpipeline", "mythirdpipeline")
+@pipelineEnv(
+    {
+        "missing_folders": [],
+        "missing_files": [],
+    },
+    "myfirstpipeline",
+    "mysecondpipeline",
+    "mythirdpipeline",
+)
 def test_run_with_3_pipelines():
     """Test the run pipeline command on a define pipeline in an environment with 3 pipelines"""
 

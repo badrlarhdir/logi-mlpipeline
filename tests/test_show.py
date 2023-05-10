@@ -4,7 +4,7 @@ from click.testing import CliRunner
 
 from mlpipeline.cli import cli
 
-from .environments import emptyEnv, initializedEnv, linkedPipelineEnv
+from .environments import emptyEnv, initializedEnv, pipelineLinkedEnv
 from .globals import EXIT_CODE_SUCCESS
 
 # ---------------------------------------------------------------------------- #
@@ -42,7 +42,7 @@ def test_show_on_already_init_env():
 # ----------------------------- Pipeline Created ----------------------------- #
 
 
-@linkedPipelineEnv(
+@pipelineLinkedEnv(
     "myfirstpipeline",
     "[notebooks/data_preprocess.ipynb, notebooks/train.ipynb]",
     ["train_data_cleaning.csv.dvc"],
@@ -61,7 +61,7 @@ def test_show_with_1_linked_pipeline_and_2_notebooks():
     assert not "upload_to_s3" in result.output
 
 
-@linkedPipelineEnv(
+@pipelineLinkedEnv(
     "myfirstpipeline",
     "[notebooks/data_preprocess.ipynb, notebooks/train.ipynb, notebooks/upload_to_s3.ipynb]",
     ["train_data_cleaning.csv.dvc"],

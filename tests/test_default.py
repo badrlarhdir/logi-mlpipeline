@@ -37,7 +37,13 @@ def test_default_no_pipeline():
 # ----------------------------- Pipeline Created ----------------------------- #
 
 
-@pipelineEnv("myfirstpipeline")
+@pipelineEnv(
+    {
+        "missing_folders": [],
+        "missing_files": [],
+    },
+    "myfirstpipeline",
+)
 def test_default_with_1_pipeline():
     """Test the create command with a pipeline that does exist"""
 
@@ -48,7 +54,15 @@ def test_default_with_1_pipeline():
     assert "Pipeline myfirstpipeline set as default" in result.output
 
 
-@pipelineEnv("myfirstpipeline", "mysecondpipeline", "mythirdpipeline")
+@pipelineEnv(
+    {
+        "missing_folders": [],
+        "missing_files": [],
+    },
+    "myfirstpipeline",
+    "mysecondpipeline",
+    "mythirdpipeline",
+)
 def test_default_with_3_pipelines():
     """Test the default pipeline command on a environment with 3 pipelines"""
 
@@ -64,7 +78,15 @@ def test_default_with_3_pipelines():
     assert "[Default] Pipeline: mysecondpipeline," in result.output
 
 
-@pipelineEnv("myfirstpipeline", "mysecondpipeline", "mythirdpipeline")
+@pipelineEnv(
+    {
+        "missing_folders": [],
+        "missing_files": [],
+    },
+    "myfirstpipeline",
+    "mysecondpipeline",
+    "mythirdpipeline",
+)
 def test_default_with_3_pipelines_last_pipeline_default():
     """Test that the default pipeline is the last one initialized"""
 
@@ -76,6 +98,10 @@ def test_default_with_3_pipelines_last_pipeline_default():
 
 
 @pipelineEnv(
+    {
+        "missing_folders": [],
+        "missing_files": [],
+    },
     "myfirstpipeline",
     "mysecondpipeline",
     "mythirdpipeline",

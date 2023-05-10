@@ -60,7 +60,13 @@ def test_create_new_pipeline_with_notebook_links():
 # ----------------------------- Pipeline Created ----------------------------- #
 
 
-@pipelineEnv("myfirstpipeline")
+@pipelineEnv(
+    {
+        "missing_folders": [],
+        "missing_files": [],
+    },
+    "myfirstpipeline",
+)
 def test_create_pipeline_that_already_exists():
     """Test the create command with a pipeline that does exist"""
 

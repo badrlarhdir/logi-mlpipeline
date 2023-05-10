@@ -118,6 +118,15 @@ def initialize_env(
         "dvc.lock",
         "requirements.txt",
     ]
+
+    # From the missing_folders and missing_files filter the init_env_folders and init_env_files lists
+    init_env_folders = [
+        folder for folder in init_env_folders if folder not in missing_folders
+    ]
+    init_env_files = [
+        file for file in init_env_files if file not in missing_files
+    ]
+
     if status == "start":
         init_dvc_env("folder", init_env_folders)
         init_dvc_env("file", init_env_files)
@@ -194,19 +203,27 @@ def initializedEnv(func):
     return wrapper
 
 
-def pipelineEnv(*pipelines: str):
+def pipelineEnv(
+    missing: dict,
+    *pipelines: str,
+):
     """Decorator to create a pipeline environment before the test
     and to clean the environment after the test
 
     Parameters
     ----------
+    missing : dict
+        The missing folders and files to dismiss from the initialization of the environment
     *pipelines : Tuple[str, ...]
         The names of the pipelines to create
     """
 
+    missing_folders = missing["missing_folders"]
+    missing_files = missing["missing_files"]
+
     def actual_decorator(func):
         def wrapper(*args, **kwargs):
-            initialize_env("start")
+            initialize_env("start", missing_folders, missing_files)
 
             runner = CliRunner()
             for pipeline in pipelines:
@@ -214,7 +231,7 @@ def pipelineEnv(*pipelines: str):
 
             result = func(*args, **kwargs)
 
-            initialize_env("end")
+            initialize_env("end", missing_folders, missing_files)
             return result
 
         return wrapper
@@ -222,7 +239,7 @@ def pipelineEnv(*pipelines: str):
     return actual_decorator
 
 
-def linkedPipelineEnv(pipeline: str, notebooks: str, data: list[str]):
+def pipelineLinkedEnv(pipeline: str, notebooks: str, data: list[str]):
     """Decorator to create a pipeline environment linked to specified notebooks
     before the test and to clean the environment after the test
 

@@ -116,7 +116,13 @@ def test_sync_on_existing_notebooks():
 # ----------------------------- Pipeline Created ----------------------------- #
 
 
-@pipelineEnv("myfirstpipeline")
+@pipelineEnv(
+    {
+        "missing_folders": [],
+        "missing_files": [],
+    },
+    "myfirstpipeline",
+)
 def test_sync_on_created_pipeline_but_unlinked_notebooks():
     """Test the sync commands with an existing pipeline
     but with no linked notebooks
