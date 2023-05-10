@@ -41,11 +41,13 @@ class PackageBuilder:
                 "./setup_env",
                 f"{PIPELINES_FOLDER}/{self.__subfolder}/setup_env",
             )
-        else:
+        elif pathlib.Path("./requirements.txt").exists():
             shutil.copy(
                 "requirements.txt",
                 f"{PIPELINES_FOLDER}/{self.__subfolder}/requirements.txt",
             )
+        else:
+            raise Exception("No requirements.txt or setup_env folder found")
 
     def __copy_data_folder(self):
         """Copy the data folder to the git repo"""

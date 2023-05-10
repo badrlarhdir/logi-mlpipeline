@@ -2,7 +2,7 @@ from click.testing import CliRunner
 
 from mlpipeline.cli import cli
 
-from .environments import initEnv, pipelineEnv
+from .environments import initializedEnv, pipelineEnv
 from .globals import EXIT_CODE_CLICK_ERROR, EXIT_CODE_SUCCESS
 
 # ---------------------------------------------------------------------------- #
@@ -12,7 +12,7 @@ from .globals import EXIT_CODE_CLICK_ERROR, EXIT_CODE_SUCCESS
 # ----------------------------- Initialized Environment ---------------------------- #
 
 
-@initEnv
+@initializedEnv
 def test_link_missing_all_arguments():
     """Test the link command without any arguments"""
 
@@ -23,7 +23,7 @@ def test_link_missing_all_arguments():
     assert "Error: Missing option '--notebooks' / '-n'." in result.output
 
 
-@initEnv
+@initializedEnv
 def test_link_uncreated_pipeline_with_notebooks_argument():
     """Test the link command with a list of notebooks but no pipeline created"""
 

@@ -152,17 +152,22 @@ class PipelineBuilder:
             # Import the jupyter notebook
             if subfolder:
                 notebook = f"{PIPELINES_FOLDER}/{subfolder}/{notebook}"
-            with io.open(notebook, "r", encoding="utf-8") as f:
-                nb = read(f, 4)
 
-            # Look for the pipeline methods inside the notebook's cells
-            cells = list(
-                filter(lambda cell: "pipeline." in cell.source, nb.cells)
-            )
+            try:
+                with io.open(notebook, "r", encoding="utf-8") as f:
+                    nb = read(f, 4)
 
-            # Execute the pipeline methods
-            for cell in cells:
-                exec(cell.source)
+                # Look for the pipeline methods inside the notebook's cells
+                cells = list(
+                    filter(lambda cell: "pipeline." in cell.source, nb.cells)
+                )
+
+                # Execute the pipeline methods
+                for cell in cells:
+                    exec(cell.source)
+            except FileNotFoundError:
+                print(f"File {notebook} not found!")
+                raise
 
         # Save the pipeline to get the yaml files needed for DVC to run
         self.__save_pipeline(subfolder)

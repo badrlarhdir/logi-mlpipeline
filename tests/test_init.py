@@ -4,7 +4,7 @@ from click.testing import CliRunner
 
 from mlpipeline.cli import cli
 
-from .environments import emptyEnv, initEnv
+from .environments import emptyEnv, initializedEnv
 from .globals import EXIT_CODE_SUCCESS
 
 # ---------------------------------------------------------------------------- #
@@ -28,7 +28,7 @@ def test_init_on_empty_env():
 # ----------------------------- Initialized Environment ---------------------------- #
 
 
-@initEnv
+@initializedEnv
 def test_init_on_already_init_env():
     """Test the init command in an environment that was already initialized
     i.e it should not brake anything and should not display any error message

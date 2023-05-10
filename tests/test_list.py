@@ -2,7 +2,7 @@ from click.testing import CliRunner
 
 from mlpipeline.cli import cli
 
-from .environments import initEnv, pipelineEnv
+from .environments import initializedEnv, pipelineEnv
 from .globals import EXIT_CODE_SUCCESS
 
 # ---------------------------------------------------------------------------- #
@@ -12,7 +12,7 @@ from .globals import EXIT_CODE_SUCCESS
 # ----------------------------- Initialized Environment ---------------------------- #
 
 
-@initEnv
+@initializedEnv
 def test_list_init_env():
     """Test the list command in a initialized environment"""
 

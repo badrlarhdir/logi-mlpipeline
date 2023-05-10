@@ -4,7 +4,7 @@ from click.testing import CliRunner
 
 from mlpipeline.cli import cli
 
-from .environments import initEnv, linkedPipelineEnv, pipelineEnv
+from .environments import initializedEnv, linkedPipelineEnv, pipelineEnv
 from .globals import EXIT_CODE_SUCCESS
 
 # ---------------------------------------------------------------------------- #
@@ -14,7 +14,7 @@ from .globals import EXIT_CODE_SUCCESS
 # ----------------------------- Initialized Environment ---------------------------- #
 
 
-@initEnv
+@initializedEnv
 def test_run_init_env():
     """Test the run command in an initialized environment"""
 

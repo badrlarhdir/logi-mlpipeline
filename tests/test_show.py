@@ -4,7 +4,7 @@ from click.testing import CliRunner
 
 from mlpipeline.cli import cli
 
-from .environments import emptyEnv, initEnv, linkedPipelineEnv
+from .environments import emptyEnv, initializedEnv, linkedPipelineEnv
 from .globals import EXIT_CODE_SUCCESS
 
 # ---------------------------------------------------------------------------- #
@@ -28,7 +28,7 @@ def test_show_on_empty_env():
 # ----------------------------- Initialized Environment ---------------------------- #
 
 
-@initEnv
+@initializedEnv
 def test_show_on_already_init_env():
     """Test the show command in an environment that was already initialized"""
 

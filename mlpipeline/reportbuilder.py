@@ -72,17 +72,22 @@ class ReportBuilder:
             # Import the jupyter notebook
             if subfolder:
                 notebook = f"{PIPELINES_FOLDER}/{subfolder}/{notebook}"
-            with io.open(notebook, "r", encoding="utf-8") as f:
-                nb = read(f, 4)
 
-            # Look for the report methods inside the notebook's cells
-            cells = list(
-                filter(lambda cell: "report." in cell.source, nb.cells)
-            )
+            try:
+                with io.open(notebook, "r", encoding="utf-8") as f:
+                    nb = read(f, 4)
 
-            # Execute the report methods
-            for cell in cells:
-                exec(cell.source)
+                # Look for the report methods inside the notebook's cells
+                cells = list(
+                    filter(lambda cell: "report." in cell.source, nb.cells)
+                )
+
+                # Execute the report methods
+                for cell in cells:
+                    exec(cell.source)
+            except FileNotFoundError:
+                print(f"File {notebook} not found!")
+                raise
 
         # Save the report to get the yaml file needed for github action job
         self.__save_report(subfolder)

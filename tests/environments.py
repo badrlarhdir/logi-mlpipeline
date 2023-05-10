@@ -173,7 +173,7 @@ def initialize_env(status: str):
                 os.remove(f".github/workflows/{file}")
 
 
-def initEnv(func: callable):
+def initializedEnv(func: callable):
     """Decorator to clean the environment from any previous test
     and to clean the environment after the test
     """
