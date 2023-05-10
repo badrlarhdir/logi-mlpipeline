@@ -4,7 +4,7 @@ from click.testing import CliRunner
 
 from mlpipeline.cli import cli
 
-from .environments import initializedEnv, pipelineEnv
+from .environments import initializedEnv, notLinkedPipelineEnv
 from .globals import EXIT_CODE_CLICK_ERROR, EXIT_CODE_FAILED, EXIT_CODE_SUCCESS
 
 # ---------------------------------------------------------------------------- #
@@ -39,7 +39,7 @@ def test_delete_all_uncreated_pipeline():
 # ----------------------------- Pipeline Created ----------------------------- #
 
 
-@pipelineEnv(
+@notLinkedPipelineEnv(
     {
         "missing_folders": [],
         "missing_files": [],
@@ -56,7 +56,7 @@ def test_delete_created_pipeline():
     assert "Pipeline myfirstpipeline deleted" in result.output
 
 
-@pipelineEnv(
+@notLinkedPipelineEnv(
     {
         "missing_folders": [],
         "missing_files": [],
@@ -74,7 +74,7 @@ def test_delete_all_with_1_existing_pipeline():
     assert "All pipelines deleted" in result.output
 
 
-@pipelineEnv(
+@notLinkedPipelineEnv(
     {
         "missing_folders": [],
         "missing_files": [],

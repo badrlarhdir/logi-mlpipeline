@@ -4,7 +4,11 @@ from click.testing import CliRunner
 
 from mlpipeline.cli import cli
 
-from .environments import initializedEnv, pipelineEnv, pipelineLinkedEnv
+from .environments import (
+    initializedEnv,
+    notLinkedPipelineEnv,
+    pipelineLinkedEnv,
+)
 from .globals import EXIT_CODE_SUCCESS
 
 # ---------------------------------------------------------------------------- #
@@ -49,7 +53,7 @@ def test_run_with_1_linked_pipeline():
     assert "Pipeline myfirstpipeline ran successfully" in result.output
 
 
-@pipelineEnv(
+@notLinkedPipelineEnv(
     {
         "missing_folders": [],
         "missing_files": [],

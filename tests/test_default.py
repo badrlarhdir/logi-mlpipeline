@@ -2,7 +2,7 @@ from click.testing import CliRunner
 
 from mlpipeline.cli import cli
 
-from .environments import initializedEnv, pipelineEnv
+from .environments import initializedEnv, notLinkedPipelineEnv
 from .globals import EXIT_CODE_CLICK_ERROR, EXIT_CODE_SUCCESS
 
 # ---------------------------------------------------------------------------- #
@@ -37,7 +37,7 @@ def test_default_no_pipeline():
 # ----------------------------- Pipeline Created ----------------------------- #
 
 
-@pipelineEnv(
+@notLinkedPipelineEnv(
     {
         "missing_folders": [],
         "missing_files": [],
@@ -54,7 +54,7 @@ def test_default_with_1_pipeline():
     assert "Pipeline myfirstpipeline set as default" in result.output
 
 
-@pipelineEnv(
+@notLinkedPipelineEnv(
     {
         "missing_folders": [],
         "missing_files": [],
@@ -78,7 +78,7 @@ def test_default_with_3_pipelines():
     assert "[Default] Pipeline: mysecondpipeline," in result.output
 
 
-@pipelineEnv(
+@notLinkedPipelineEnv(
     {
         "missing_folders": [],
         "missing_files": [],
@@ -97,7 +97,7 @@ def test_default_with_3_pipelines_last_pipeline_default():
     assert "[Default] Pipeline: mythirdpipeline," in result.output
 
 
-@pipelineEnv(
+@notLinkedPipelineEnv(
     {
         "missing_folders": [],
         "missing_files": [],

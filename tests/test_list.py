@@ -2,7 +2,7 @@ from click.testing import CliRunner
 
 from mlpipeline.cli import cli
 
-from .environments import initializedEnv, pipelineEnv
+from .environments import initializedEnv, notLinkedPipelineEnv
 from .globals import EXIT_CODE_SUCCESS
 
 # ---------------------------------------------------------------------------- #
@@ -26,7 +26,7 @@ def test_list_init_env():
 # ----------------------------- Pipeline Created ----------------------------- #
 
 
-@pipelineEnv(
+@notLinkedPipelineEnv(
     {
         "missing_folders": [],
         "missing_files": [],
@@ -43,7 +43,7 @@ def test_list_with_1_existing_pipeline():
     assert "Pipeline: myfirstpipeline" in result.output
 
 
-@pipelineEnv(
+@notLinkedPipelineEnv(
     {
         "missing_folders": [],
         "missing_files": [],

@@ -203,7 +203,7 @@ def initializedEnv(func):
     return wrapper
 
 
-def pipelineEnv(
+def notLinkedPipelineEnv(
     missing: dict,
     *pipelines: str,
 ):

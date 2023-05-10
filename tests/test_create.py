@@ -4,7 +4,7 @@ from click.testing import CliRunner
 
 from mlpipeline.cli import cli
 
-from .environments import initializedEnv, pipelineEnv
+from .environments import initializedEnv, notLinkedPipelineEnv
 from .globals import EXIT_CODE_SUCCESS
 
 # ---------------------------------------------------------------------------- #
@@ -60,7 +60,7 @@ def test_create_new_pipeline_with_notebook_links():
 # ----------------------------- Pipeline Created ----------------------------- #
 
 
-@pipelineEnv(
+@notLinkedPipelineEnv(
     {
         "missing_folders": [],
         "missing_files": [],
