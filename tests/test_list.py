@@ -2,19 +2,19 @@ from click.testing import CliRunner
 
 from mlpipeline.cli import cli
 
-from .environments import cleanEnv, pipelineEnv
+from .environments import initEnv, pipelineEnv
 from .globals import EXIT_CODE_SUCCESS
 
 # ---------------------------------------------------------------------------- #
 #                           Test on the list command                           #
 # ---------------------------------------------------------------------------- #
 
-# ----------------------------- Clean Environment ---------------------------- #
+# ----------------------------- Initialized Environment ---------------------------- #
 
 
-@cleanEnv
-def test_list_clean_env():
-    """Test the list command in a clean environment"""
+@initEnv
+def test_list_init_env():
+    """Test the list command in a initialized environment"""
 
     runner = CliRunner()
     result = runner.invoke(cli, ["list"])

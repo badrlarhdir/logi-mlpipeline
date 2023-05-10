@@ -4,17 +4,17 @@ from click.testing import CliRunner
 
 from mlpipeline.cli import cli
 
-from .environments import cleanEnv, pipelineEnv
+from .environments import initEnv, pipelineEnv
 from .globals import EXIT_CODE_CLICK_ERROR, EXIT_CODE_FAILED, EXIT_CODE_SUCCESS
 
 # ---------------------------------------------------------------------------- #
 #                           Test on the sync command                           #
 # ---------------------------------------------------------------------------- #
 
-# ----------------------------- Clean Environment ---------------------------- #
+# ----------------------------- Initialized Environment ---------------------------- #
 
 
-@cleanEnv
+@initEnv
 def test_sync_notebooks_missing_argument():
     """Test the sync command with a missing argument for the notebooks list"""
 
@@ -25,7 +25,7 @@ def test_sync_notebooks_missing_argument():
     assert "Error: Option '-n' requires an argument." in result.output
 
 
-@cleanEnv
+@initEnv
 def test_sync_notebooks_empty_argument():
     """Test the sync command with an empty argument for the notebooks list"""
 
@@ -39,7 +39,7 @@ def test_sync_notebooks_empty_argument():
     )
 
 
-@cleanEnv
+@initEnv
 def test_sync_pipeline_missing_argument():
     """Test the sync command with a missing argument for the pipeline name"""
 
@@ -50,7 +50,7 @@ def test_sync_pipeline_missing_argument():
     assert "Error: Option '-p' requires an argument." in result.output
 
 
-@cleanEnv
+@initEnv
 def test_sync_pipeline_empty_argument():
     """Test the sync command with an empty argument for the pipeline name"""
 
@@ -64,7 +64,7 @@ def test_sync_pipeline_empty_argument():
     )
 
 
-@cleanEnv
+@initEnv
 def test_sync_on_unexisting_notebooks():
     """Test the sync command with a list of notebooks that does not exist"""
 
@@ -80,7 +80,7 @@ def test_sync_on_unexisting_notebooks():
     assert not pathlib.Path("nbs/training.ipynb").exists()
 
 
-@cleanEnv
+@initEnv
 def test_sync_on_unexisting_pipeline():
     """Test the sync command with a pipeline that does not exist"""
 
@@ -91,7 +91,7 @@ def test_sync_on_unexisting_pipeline():
     assert "No pipelines found" in result.output
 
 
-@cleanEnv
+@initEnv
 def test_sync_on_existing_notebooks():
     """Test the sync command with a list of notebooks that exist"""
 
@@ -118,7 +118,7 @@ def test_sync_on_existing_notebooks():
 
 @pipelineEnv("myfirstpipeline")
 def test_sync_on_created_pipeline_but_unlinked_notebooks():
-    """Test the sync commands with a pipeline exists
+    """Test the sync commands with an existing pipeline
     but with no linked notebooks
     """
 

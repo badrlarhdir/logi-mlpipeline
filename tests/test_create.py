@@ -4,17 +4,17 @@ from click.testing import CliRunner
 
 from mlpipeline.cli import cli
 
-from .environments import cleanEnv, pipelineEnv
+from .environments import initEnv, pipelineEnv
 from .globals import EXIT_CODE_SUCCESS
 
 # ---------------------------------------------------------------------------- #
 #                          Test on the create command                          #
 # ---------------------------------------------------------------------------- #
 
-# ----------------------------- Clean Environment ---------------------------- #
+# ----------------------------- Initialized Environment ---------------------------- #
 
 
-@cleanEnv
+@initEnv
 def test_create_new_pipeline():
     """Test the create command with a pipeline that does not exist"""
 
@@ -25,7 +25,7 @@ def test_create_new_pipeline():
     assert "Pipeline myfirstpipeline created" in result.output
 
 
-@cleanEnv
+@initEnv
 def test_create_new_pipeline_with_notebook_links():
     """Test the create command with a pipeline that does not exist with notebook links"""
 

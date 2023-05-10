@@ -85,16 +85,61 @@ def delete_dvc_env_files(file_name: str):
             os.remove(file_name)
 
 
-def clean_environment(status: str, pipeline: str = None):
+def empty_environment():
+    """Empty the environment from any previous test"""
+
+    # No .github/workflows folder, no .dvc folder, no params.yaml, no dvc.yaml, no requirements.txt, no dvc.lock
+    # no notebooks folder, no data folder, no outputs folder, no .dvcignore
+    # no pipelines folder
+
+    delete_dvc_env_folders(
+        [
+            ".dvc",
+            "notebooks",
+            "data",
+            "outputs",
+            PIPELINES_FOLDER,
+            ".github/workflows",
+        ]
+    )
+    delete_dvc_env_files(
+        [
+            "dvc.yaml",
+            "params.yaml",
+            ".dvcignore",
+            "dvc.lock",
+            "requirements.txt",
+        ]
+    )
+
+
+def emptyEnv(func: callable):
+    """Decorator to clean the environment from any previous test
+    and to clean the environment after the test
+    """
+
+    def wrapper(*args, **kwargs):
+        empty_environment()
+
+        result = func(*args, **kwargs)
+
+        empty_environment()
+        return result
+
+    return wrapper
+
+
+def initialized_env(status: str, pipeline: str = None):
     """Clean the environment from any previous test"""
 
     # Delete the pipelines folders if exists
     if status == "start":
-        init_dvc_env_folders([".dvc", "notebooks", "data", "outputs"])
+        init_dvc_env_folders(
+            [".dvc", "notebooks", ".github/", "data", "outputs"]
+        )
         init_dvc_env_files(
             [
                 "dvc.yaml",
-                ".github/workflows/self-hosted-runner.yaml",
                 "params.yaml",
                 ".dvcignore",
                 "dvc.lock",
@@ -103,11 +148,12 @@ def clean_environment(status: str, pipeline: str = None):
         )
 
     if status == "end":
-        delete_dvc_env_folders([".dvc", "notebooks", "data", "outputs"])
+        delete_dvc_env_folders(
+            [".dvc", "notebooks", ".github/", "data", "outputs"]
+        )
         delete_dvc_env_files(
             [
                 "dvc.yaml",
-                ".github/workflows/self-hosted-runner.yaml",
                 "params.yaml",
                 ".dvcignore",
                 "dvc.lock",
@@ -125,17 +171,17 @@ def clean_environment(status: str, pipeline: str = None):
                 os.remove(f".github/workflows/{file}")
 
 
-def cleanEnv(func: callable):
+def initEnv(func: callable):
     """Decorator to clean the environment from any previous test
     and to clean the environment after the test
     """
 
     def wrapper(*args, **kwargs):
-        clean_environment("start")
+        initialized_env("start")
 
         result = func(*args, **kwargs)
 
-        clean_environment("end")
+        initialized_env("end")
         return result
 
     return wrapper
@@ -153,7 +199,7 @@ def pipelineEnv(*pipelines: Tuple[str, ...]):
 
     def actual_decorator(func: callable):
         def wrapper(*args, **kwargs):
-            clean_environment("start")
+            initialized_env("start")
 
             runner = CliRunner()
             for pipeline in pipelines:
@@ -161,7 +207,7 @@ def pipelineEnv(*pipelines: Tuple[str, ...]):
 
             result = func(*args, **kwargs)
 
-            clean_environment("end")
+            initialized_env("end")
             return result
 
         return wrapper
@@ -183,7 +229,7 @@ def linkedPipelineEnv(pipeline: str, notebooks: str):
 
     def actual_decorator(func: callable):
         def wrapper(*args, **kwargs):
-            clean_environment("start", pipeline)
+            initialized_env("start", pipeline)
 
             runner = CliRunner()
             result = runner.invoke(
@@ -192,7 +238,7 @@ def linkedPipelineEnv(pipeline: str, notebooks: str):
 
             result = func(*args, **kwargs)
 
-            clean_environment("end", pipeline)
+            initialized_env("end", pipeline)
             return result
 
         return wrapper

@@ -2,17 +2,17 @@ from click.testing import CliRunner
 
 from mlpipeline.cli import cli
 
-from .environments import cleanEnv, pipelineEnv
+from .environments import initEnv, pipelineEnv
 from .globals import EXIT_CODE_CLICK_ERROR, EXIT_CODE_SUCCESS
 
 # ---------------------------------------------------------------------------- #
 #                          Test on the default command                          #
 # ---------------------------------------------------------------------------- #
 
-# ----------------------------- Clean Environment ---------------------------- #
+# ----------------------------- Initialized Environment ---------------------------- #
 
 
-@cleanEnv
+@initEnv
 def test_default():
     """Test the default command without any pipeline"""
 
@@ -23,7 +23,7 @@ def test_default():
     assert "Error: Missing option '--pipeline' / '-p'." in result.output
 
 
-@cleanEnv
+@initEnv
 def test_default_no_pipeline():
     """Test the default command when no pipeline exists"""
 

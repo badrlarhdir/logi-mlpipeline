@@ -4,19 +4,19 @@ from click.testing import CliRunner
 
 from mlpipeline.cli import cli
 
-from .environments import cleanEnv, linkedPipelineEnv, pipelineEnv
+from .environments import initEnv, linkedPipelineEnv, pipelineEnv
 from .globals import EXIT_CODE_SUCCESS
 
 # ---------------------------------------------------------------------------- #
 #                          Test on the run_local command                          #
 # ---------------------------------------------------------------------------- #
 
-# ----------------------------- Clean Environment ---------------------------- #
+# ----------------------------- Initialized Environment ---------------------------- #
 
 
-@cleanEnv
-def test_run_clean_env():
-    """Test the run command in an empty environment"""
+@initEnv
+def test_run_init_env():
+    """Test the run command in an initialized environment"""
 
     runner = CliRunner()
     result = runner.invoke(cli, ["run_local"])

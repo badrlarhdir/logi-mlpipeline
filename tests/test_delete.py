@@ -4,17 +4,17 @@ from click.testing import CliRunner
 
 from mlpipeline.cli import cli
 
-from .environments import cleanEnv, pipelineEnv
+from .environments import initEnv, pipelineEnv
 from .globals import EXIT_CODE_CLICK_ERROR, EXIT_CODE_FAILED, EXIT_CODE_SUCCESS
 
 # ---------------------------------------------------------------------------- #
 #                           Test on the delete command                           #
 # ---------------------------------------------------------------------------- #
 
-# ----------------------------- Clean Environment ---------------------------- #
+# ----------------------------- Initialized Environment ---------------------------- #
 
 
-@cleanEnv
+@initEnv
 def test_delete_uncreated_pipeline():
     """Test the delete command with a pipeline that does not exist"""
 
@@ -25,7 +25,7 @@ def test_delete_uncreated_pipeline():
     assert "Pipeline myfirstpipeline not found" in result.output
 
 
-@cleanEnv
+@initEnv
 def test_delete_all_uncreated_pipeline():
     """Test the delete --all/-a command with no pipeline that exists"""
 
