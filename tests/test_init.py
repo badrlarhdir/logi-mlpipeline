@@ -16,7 +16,7 @@ from .globals import EXIT_CODE_SUCCESS
 
 @emptyEnv
 def test_init_on_empty_env():
-    """Test the iniot command in an empty environment"""
+    """Test the init command in an empty environment"""
 
     runner = CliRunner()
     result = runner.invoke(cli, ["init"])
