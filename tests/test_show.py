@@ -44,9 +44,29 @@ def test_show_on_already_init_env():
 
 @linkedPipelineEnv(
     "myfirstpipeline",
-    "[notebooks/data_preprocess.ipynb, notebooks/train.ipynb, notebooks/upload_to_s3.ipynb]",
+    "[notebooks/data_preprocess.ipynb, notebooks/train.ipynb]",
+    ["train_data_cleaning.csv.dvc"],
 )
-def test_show_with_1_linked_pipeline():
+def test_show_with_1_linked_pipeline_and_2_notebooks():
+    """Test the show command with a pipeline that does exist"""
+
+    runner = CliRunner()
+    result = runner.invoke(cli, ["show"])
+
+    assert result.exit_code == EXIT_CODE_SUCCESS
+
+    assert "data/train_data_cleaning.csv" in result.output
+    assert "data_preprocess" in result.output
+    assert "train" in result.output
+    assert not "upload_to_s3" in result.output
+
+
+@linkedPipelineEnv(
+    "myfirstpipeline",
+    "[notebooks/data_preprocess.ipynb, notebooks/train.ipynb, notebooks/upload_to_s3.ipynb]",
+    ["train_data_cleaning.csv.dvc"],
+)
+def test_show_with_1_linked_pipeline_and_3_notebooks():
     """Test the show command with a pipeline that does exist"""
 
     runner = CliRunner()

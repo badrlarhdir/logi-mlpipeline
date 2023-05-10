@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 import pathlib
 import shutil
@@ -129,7 +131,7 @@ def emptyEnv(func: callable):
     return wrapper
 
 
-def initialized_env(status: str, pipeline: str = None):
+def initialize_env(status: str):
     """Clean the environment from any previous test"""
 
     # Delete the pipelines folders if exists
@@ -177,11 +179,11 @@ def initEnv(func: callable):
     """
 
     def wrapper(*args, **kwargs):
-        initialized_env("start")
+        initialize_env("start")
 
         result = func(*args, **kwargs)
 
-        initialized_env("end")
+        initialize_env("end")
         return result
 
     return wrapper
@@ -199,7 +201,7 @@ def pipelineEnv(*pipelines: Tuple[str, ...]):
 
     def actual_decorator(func: callable):
         def wrapper(*args, **kwargs):
-            initialized_env("start")
+            initialize_env("start")
 
             runner = CliRunner()
             for pipeline in pipelines:
@@ -207,7 +209,7 @@ def pipelineEnv(*pipelines: Tuple[str, ...]):
 
             result = func(*args, **kwargs)
 
-            initialized_env("end")
+            initialize_env("end")
             return result
 
         return wrapper
@@ -215,7 +217,28 @@ def pipelineEnv(*pipelines: Tuple[str, ...]):
     return actual_decorator
 
 
-def linkedPipelineEnv(pipeline: str, notebooks: str):
+def initialize_data(data: list[str]):
+    """Initialize the selected data from the resources data folder"""
+
+    # Get data from the data folder
+    for file in data:
+        if pathlib.Path(f"{RESOURCES_FOLDER}/data/{file}").exists():
+            shutil.copy(f"{RESOURCES_FOLDER}/data/{file}", f"data/{file}")
+
+
+def initialize_notebooks():
+    """Initialize the selected data from the resources data folder"""
+
+    # copy the notebooks folder into notebooks folder
+    if pathlib.Path(f"{RESOURCES_FOLDER}/notebooks").exists():
+        shutil.copytree(
+            f"{RESOURCES_FOLDER}/notebooks/",
+            f"notebooks/",
+            dirs_exist_ok=True,
+        )
+
+
+def linkedPipelineEnv(pipeline: str, notebooks: str, data: list[str]):
     """Decorator to create a pipeline environment linked to specified notebooks
     before the test and to clean the environment after the test
 
@@ -225,20 +248,37 @@ def linkedPipelineEnv(pipeline: str, notebooks: str):
         Name of the pipeline to create
     notebooks : str
         Names of the notebooks to link to the pipeline
+    data :  list[str]
+        List of Names of the data to link with the pipeline
     """
 
     def actual_decorator(func: callable):
         def wrapper(*args, **kwargs):
-            initialized_env("start", pipeline)
-
             runner = CliRunner()
+
+            # Initialize the environment
+            result = runner.invoke(cli, ["init"])
+            # Get data from the data folder
+            initialize_data(data)
+            # Get notebooks from the notebooks folder
+            initialize_notebooks()
+
+            # Copy requirements.txt from resources folder
+            if pathlib.Path(f"{RESOURCES_FOLDER}/requirements.txt").exists():
+                shutil.copy(
+                    f"{RESOURCES_FOLDER}/requirements.txt", "requirements.txt"
+                )
+
+            # Create and link the pipeline
             result = runner.invoke(
                 cli, ["create", "-p", pipeline, "-n", notebooks]
             )
+            # Sync the pipeline
+            result = runner.invoke(cli, ["sync", "-p", pipeline])
 
             result = func(*args, **kwargs)
 
-            initialized_env("end", pipeline)
+            initialize_env("end")
             return result
 
         return wrapper

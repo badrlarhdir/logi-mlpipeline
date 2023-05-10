@@ -33,12 +33,14 @@ def test_run_init_env():
 
 @linkedPipelineEnv(
     "myfirstpipeline",
-    "[notebooks/data_preprocess.ipynb, notebooks/train.ipynb]",
+    "[notebooks/data_preprocess.ipynb, notebooks/train.ipynb, notebooks/upload_to_s3.ipynb]",
+    ["train_data_cleaning.csv.dvc"],
 )
 def test_run_with_1_linked_pipeline():
     """Test the run command with a pipeline that does exist"""
 
     runner = CliRunner()
+
     result = runner.invoke(cli, ["run_local", "-p", "myfirstpipeline"])
 
     assert result.exit_code == EXIT_CODE_SUCCESS
