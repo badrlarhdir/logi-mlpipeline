@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import pathlib
+import pdb
 import shutil
 
 import yaml
@@ -81,17 +82,28 @@ class PackageBuilder:
         with open("dvc.yaml", "r") as dvc_f:
             data = yaml.safe_load(dvc_f)
 
-        unique_deps = set()
-        # Get the dependencies of the pipeline for each stage
-        for stage in data["stages"]:
-            for dep in data["stages"][stage]["deps"]:
-                # get elements that are not from the data folder
-                if "data" not in dep:
-                    unique_deps.add(dep)
+        # get the dependencies of the pipeline
+        unique_deps = set(
+            dep
+            for stage in data["stages"]
+            for dep in data["stages"][stage]["deps"]
+            if "data" not in dep
+        )
+
+        # get the outputs of the pipeline
+        unique_outs = set(
+            out
+            for stage in data["stages"]
+            if "outs" in data["stages"][stage]
+            for out in data["stages"][stage]["outs"]
+        )
+
+        # remove the outputs from the dependencies
+        unique_deps = unique_deps - unique_outs
 
         # TODO: clean this up for better readability
         for dep in unique_deps:
-            # if the dependency has a . inside of it, it is a file
+            # Check if the dependency is a file
             if os.path.isfile(dep) or os.path.isfile(f"./notebooks/{dep}"):
                 # get the name of the dependency
                 dep_name = dep.split("/")[-1]
@@ -128,6 +140,7 @@ class PackageBuilder:
                         + f"{PIPELINES_FOLDER}/{self.__subfolder}/{dep_url}",
                         exist_ok=True,
                     )
+                    # copy the dependency
                     shutil.copy(
                         dep,
                         os.getcwd()
@@ -149,6 +162,7 @@ class PackageBuilder:
                 else:
                     # remove the first two dots
                     dep = dep[3:]
+                    # copy the folder dependency
                     shutil.copytree(
                         dep,
                         os.getcwd()
