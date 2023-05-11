@@ -22,6 +22,7 @@ setup(
         "boto3",
         "requests",
         "tabulate",
+        "dvc[s3]",
     ],
     packages=find_packages(),
     entry_points={"console_scripts": "mlp = mlpipeline.cli:cli"},
