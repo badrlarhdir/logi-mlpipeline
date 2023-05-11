@@ -86,6 +86,7 @@ class PackageBuilder:
         unique_deps = set(
             dep
             for stage in data["stages"]
+            if "deps" in data["stages"][stage]
             for dep in data["stages"][stage]["deps"]
             if "data" not in dep
         )
