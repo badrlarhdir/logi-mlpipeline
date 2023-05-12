@@ -180,7 +180,7 @@ class PackageBuilder:
         """
 
         shutil.copy(
-            os.path.join(os.path.dirname(__file__), ".gitignore"),
+            os.path.join(os.path.dirname(__file__), "resources/.gitignore"),
             f"{PIPELINES_FOLDER}/{self.__subfolder}/.gitignore",
         )
 
