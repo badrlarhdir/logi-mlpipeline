@@ -10,7 +10,8 @@ setup(
     license="MIT",
     package_data={
         "mlpipeline": [
-            "resources/*",
+            "resources/.gitignore",
+            "resources/base.yaml",
         ]
     },
     include_package_data=True,
