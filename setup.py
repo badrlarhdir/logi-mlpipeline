@@ -20,6 +20,7 @@ setup(
         "blackdoc",
         "flake8",
         "mypy",
+        "ipykernel",
         "isort",
         "pathlib",
         "nbformat",
