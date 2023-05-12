@@ -9,11 +9,12 @@ setup(
     author_email="blarhdir@logitech.com",
     license="MIT",
     package_data={
-        "logi-mlpipeline": [
-            "mlpipeline/resources/.gitignore",
-            "mlpipeline/resources/base.yaml",
+        "mlpipeline": [
+            "resources/.gitignore",
+            "resources/base.yaml",
         ]
     },
+    include_package_data=True,
     install_requires=[
         "pytest",
         "black",
