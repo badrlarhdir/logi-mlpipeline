@@ -96,7 +96,7 @@ class ReportBuilder:
         """Save the cml report"""
 
         with open(
-            os.path.join(os.path.dirname(__file__), "resources/base.yaml"), "r"
+            os.path.join(os.path.dirname(__file__), "base.yaml"), "r"
         ) as base_f:
             data_self_hosted_runner = yaml.safe_load(base_f)
 
