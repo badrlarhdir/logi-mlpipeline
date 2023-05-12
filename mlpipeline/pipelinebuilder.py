@@ -205,6 +205,22 @@ class PipelineBuilder:
     def __save_pipeline(self, subfolder: str = None):
         """Save the pipeline to their respective files"""
 
+        def convert_dict_keys_to_list_recursive(dict_input):
+            for key, value in dict_input.items():
+                if isinstance(value, list):
+                    if all(isinstance(item, list) for item in value):
+                        for item in value:
+                            convert_dict_keys_to_list_recursive({key: item})
+                    else:
+                        dict_input[key] = {"list": {key: value}}
+                elif isinstance(value, dict):
+                    dict_input[key] = convert_dict_keys_to_list_recursive(
+                        value
+                    )
+                else:
+                    continue
+            return dict_input
+
         def save_dvc():
             dvc_yml = "dvc.yaml"
 
@@ -227,11 +243,17 @@ class PipelineBuilder:
                 if not pathlib.Path(params_yml).exists():
                     # Save the params.yaml file in the root directory
                     with open(params_yml, "w") as params_f:
-                        yaml.dump(self.__params, params_f)
+                        yaml.dump(
+                            convert_dict_keys_to_list_recursive(self.__params),
+                            params_f,
+                        )
 
                     # Save the params.yaml file in the working directory
                     with open(wdir_params_yml, "w") as wdir_params_f:
-                        yaml.dump(self.__params, wdir_params_f)
+                        yaml.dump(
+                            convert_dict_keys_to_list_recursive(self.__params),
+                            wdir_params_f,
+                        )
                 # If params.yml has changed (i.e by a DS),
                 # copy the old one in the working directory to sync both files
                 else:

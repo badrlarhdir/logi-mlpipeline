@@ -68,6 +68,15 @@ def delete_all_pipelines():
         print("No pipelines found")
         return
 
+    # delete the params.yaml file even in notebooks if it exists
+    params_path = "params.yaml"
+    if pathlib.Path(params_path).exists():
+        pathlib.Path(params_path).unlink()
+
+    params_notebooks_path = "notebooks/params.yaml"
+    if pathlib.Path(params_notebooks_path).exists():
+        pathlib.Path(params_notebooks_path).unlink()
+
     print("All pipelines deleted")
 
 

@@ -26,7 +26,7 @@ def create_pipeline(pipeline: str):
     os.makedirs(os.path.join(PIPELINES_FOLDER, pipeline))
 
     pipelines_path = f"{PIPELINES_FOLDER}/pipelines.json"
-    # Create the params.yaml file with the pipeline name as key and empty string as value
+    # Create the params.json file with the pipeline name as key and empty string as value
     # and set the pipeline to the default one in the pipelines.json file
     if pathlib.Path(pipelines_path).exists():
         with open(pipelines_path, "r") as pipelines_f:
