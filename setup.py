@@ -10,11 +10,9 @@ setup(
     license="MIT",
     package_data={
         "mlpipeline": [
-            "resources/.gitignore",
-            "resources/base.yaml",
+            "resources/*",
         ]
     },
-    include_package_data=True,
     install_requires=[
         "pytest",
         "black",
