@@ -14,7 +14,6 @@ setup(
             "mlpipeline/resources/base.yaml",
         ]
     },
-    include_package_data=True,
     install_requires=[
         "pytest",
         "black",
