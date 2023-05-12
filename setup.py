@@ -8,6 +8,8 @@ setup(
     url="https://github.com/badrlarhdir/logi-mlpipeline",
     author_email="blarhdir@logitech.com",
     license="MIT",
+    package_data={"logi-mlpipeline": ["mlpipeline/resources/*"]},
+    include_package_data=True,
     install_requires=[
         "pytest",
         "black",
