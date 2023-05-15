@@ -17,7 +17,7 @@ def init():
         # Copy from the .gitignore.txt file in the package
         shutil.copyfile(
             os.path.join(
-                os.path.dirname(__file__), "../tests/resources/.gitignore.txt"
+                os.path.dirname(__file__), "./resources/gitignore.txt"
             ),
             ".gitignore",
         )
