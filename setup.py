@@ -12,10 +12,9 @@ setup(
         "mlpipeline": [
             "resources/.gitignore",
             "resources/base.yaml",
-            "resources/gitignore.txt",
+            "resources/.gitignore.txt",
         ]
     },
-    include_package_data=True,
     install_requires=[
         "pytest",
         "black",
