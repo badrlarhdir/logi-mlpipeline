@@ -12,7 +12,7 @@ setup(
         "mlpipeline": [
             "resources/.gitignore",
             "resources/base.yaml",
-            "resources/.gitignore.txt",
+            "resources/gitignore.txt",
         ]
     },
     install_requires=[
