@@ -16,7 +16,9 @@ def init():
     if not pathlib.Path(".gitignore").exists():
         # Copy from the .gitignore.txt file in the package
         shutil.copyfile(
-            os.path.join(os.path.dirname(__file__), "resources/gitignore.txt"),
+            os.path.join(
+                os.path.dirname(__file__), "resources/.gitignore.txt"
+            ),
             ".gitignore",
         )
 
