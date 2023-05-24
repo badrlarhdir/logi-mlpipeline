@@ -19,6 +19,7 @@ setup(
         "pytest",
         "black",
         "blackdoc",
+        "papermill",
         "flake8",
         "mypy",
         "ipykernel",
