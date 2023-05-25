@@ -62,8 +62,12 @@ def upload_folder_to_s3(
     # Upload the contents of the local folder to S3
     for subdir, _, files in os.walk(folder_path):
         for file in files:
-            file_path = os.path.join(subdir, file)
-            s3_key = os.path.relpath(file_path, folder_path)
-            s3.upload_file(file_path, s3_bucket_name, f"{folder_name}{s3_key}")
+            # check if file doesn't start with .git
+            if not file.startswith(".git"):
+                file_path = os.path.join(subdir, file)
+                s3_key = os.path.relpath(file_path, folder_path)
+                s3.upload_file(
+                    file_path, s3_bucket_name, f"{folder_name}{s3_key}"
+                )
 
     print("Outputs uploaded to s3")
