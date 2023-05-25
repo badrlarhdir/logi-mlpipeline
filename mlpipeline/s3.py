@@ -57,7 +57,7 @@ def upload_folder_to_s3(
 
     # Define bucket and folder names
     date_string = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-    folder_name = f"{date_string}/{folder_name_s3}/"
+    folder_name = f"mlops/{date_string}/{folder_name_s3}/"
 
     # Upload the contents of the local folder to S3
     for subdir, _, files in os.walk(folder_path):
