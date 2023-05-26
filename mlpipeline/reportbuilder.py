@@ -223,7 +223,9 @@ class ReportBuilder:
                     sort_keys=False,
                 )
 
-        print("Report saved successfully")
+        print(
+            f"{subfolder if subfolder else 'Main'} Report saved successfully"
+        )
 
 
 report = ReportBuilder()

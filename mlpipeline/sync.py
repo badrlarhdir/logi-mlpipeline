@@ -19,7 +19,7 @@ def sync_main_project(notebooks: list[str]):
 
     pipeline_steps(notebooks)
     report_steps(notebooks)
-    print("Project synced")
+    print("Main Project synced")
 
 
 def sync_pipeline_project(notebooks: list[str], subfolder: str):

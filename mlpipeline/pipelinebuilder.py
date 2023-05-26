@@ -277,7 +277,9 @@ class PipelineBuilder:
         save_dvc()
         save_params()
 
-        print("Pipeline saved successfully")
+        print(
+            f"{subfolder if subfolder else 'Main'} Pipeline saved successfully"
+        )
 
 
 pipeline = PipelineBuilder()
