@@ -205,7 +205,6 @@ class PackageBuilder:
 
         # Copy the notebooks of the pipeline
         for notebook in notebooks:
-            print(notebook)
             # Copy the notebooks of the pipeline
             shutil.copy(
                 notebook, f"{PIPELINES_FOLDER}/{self.__subfolder}/notebooks"
