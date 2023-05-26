@@ -4,6 +4,7 @@ import os
 import pathlib
 import pdb
 import shutil
+import subprocess
 
 import yaml
 
@@ -53,11 +54,60 @@ class PackageBuilder:
     def __copy_data_folder(self):
         """Copy the data folder to the git repo"""
 
-        shutil.copytree(
-            "data",
-            f"{PIPELINES_FOLDER}/{self.__subfolder}/data",
-            dirs_exist_ok=True,
+        # Delete the data folder if it exists
+        if pathlib.Path(
+            f"{PIPELINES_FOLDER}/{self.__subfolder}/data"
+        ).exists():
+            shutil.rmtree(f"{PIPELINES_FOLDER}/{self.__subfolder}/data")
+
+        # Run the git ls-files command and capture the output
+        output = subprocess.check_output(
+            [
+                "git",
+                "ls-files",
+                "--exclude-standard",
+                "--cached",
+                "--others",
+                "data",
+            ]
+        ).decode("utf-8")
+
+        # Split the output into individual file paths
+        file_paths = output.split("\n")
+
+        # Remove any empty elements from the list
+        file_paths = [path for path in file_paths if path]
+
+        # Specify the destination folder where you want to copy the files
+        destination_folder = f"{PIPELINES_FOLDER}/{self.__subfolder}"
+
+        # Get the root path of the Git repository
+        git_root = (
+            subprocess.check_output(["git", "rev-parse", "--show-toplevel"])
+            .decode("utf-8")
+            .strip()
         )
+
+        # Copy each file to the destination folder
+        for file_path in file_paths:
+            # Construct the complete source file path
+            source_file_path = os.path.join(git_root, file_path)
+
+            # Construct the destination file path
+            destination_file_path = os.path.join(destination_folder, file_path)
+
+            # Create the destination folder if it doesn't exist
+            os.makedirs(os.path.dirname(destination_file_path), exist_ok=True)
+
+            # Copy the file to the destination folder
+            shutil.copy(source_file_path, destination_file_path)
+
+        # LEGACY: old code to copy the data folder to the git repo
+        # shutil.copytree(
+        #     "data",
+        #     f"{PIPELINES_FOLDER}/{self.__subfolder}/data",
+        #     dirs_exist_ok=True,
+        # )
 
     def __create_folder(self, folder_name: str):
         """Create a folder in the root directory
