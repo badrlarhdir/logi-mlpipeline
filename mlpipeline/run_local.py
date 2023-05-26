@@ -1,4 +1,7 @@
+import os
 import subprocess
+
+import yaml
 
 from .default import get_default_pipeline
 from .globals import PIPELINES_FOLDER
@@ -12,9 +15,48 @@ def run_local(pipeline: str):
         (optional) pipeline (str): name of the pipeline
     """
 
+    def find_all_dvc_files_and_pull_them():
+        """Find all dvc.yaml files in the project and pull them"""
+
+        data_folder = "data"  # Specify the path to the data folder
+        dvc_files = []
+
+        # Find all .dvc files within the data folder
+        for root, dirs, files in os.walk(data_folder):
+            for file in files:
+                if file.endswith(".dvc"):
+                    dvc_files.append(os.path.join(root, file))
+
+        # Process each .dvc file
+        for dvc_file in dvc_files:
+            # Read the contents of the .dvc file
+            with open(dvc_file, "r") as file:
+                dvc_content = yaml.safe_load(file)
+
+                s3_path = dvc_content["deps"][0]["path"]
+
+            outs_path = os.path.join(dvc_file.replace(".dvc", ""))
+
+            print(
+                "Pulling ",
+                s3_path,
+                " to ",
+                outs_path,
+            )
+
+            # Call dvc import-url with the specific S3 path and output path
+            subprocess.run(
+                [
+                    "dvc",
+                    "import-url",
+                    s3_path,
+                    outs_path,
+                ]
+            )
+
     if pipeline == "main":
         print("Running main project...")
-        subprocess.run(["dvc", "pull", "--allow-missing"])
+        find_all_dvc_files_and_pull_them()
         subprocess.run(["dvc", "repro", "-f"])
 
         # Reset dvc.lock file
@@ -35,14 +77,10 @@ def run_local(pipeline: str):
         print("Running pipeline", pipeline, "...")
         sync_pipeline(pipeline)
 
-        subprocess.run(
-            "cd "
-            + PIPELINES_FOLDER
-            + "/"
-            + pipeline
-            + " && dvc pull --allow-missing && dvc repro -f",
-            shell=True,
-        )
+        # Change directory to the pipeline using os.chdir()
+        os.chdir(os.path.join(PIPELINES_FOLDER, pipeline))
+        find_all_dvc_files_and_pull_them()
+        subprocess.run(["dvc", "repro", "-f"])
 
         path_pipeline_dvc_lock = f"./{PIPELINES_FOLDER}/{pipeline}/dvc.lock"
 
