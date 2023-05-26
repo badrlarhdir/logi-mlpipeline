@@ -40,5 +40,7 @@ def init():
     # Create outputs folder
     if not pathlib.Path("outputs").exists():
         os.makedirs("outputs")
+        # create a .gitkeep file to keep the folder in git
+        pathlib.Path("outputs/.gitkeep").touch()
 
     print("Project initialized")
