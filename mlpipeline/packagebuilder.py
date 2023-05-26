@@ -54,12 +54,6 @@ class PackageBuilder:
     def __copy_data_folder(self):
         """Copy the data folder to the git repo"""
 
-        # Delete the data folder if it exists
-        # if pathlib.Path(
-        #     f"{PIPELINES_FOLDER}/{self.__subfolder}/data"
-        # ).exists():
-        #     shutil.rmtree(f"{PIPELINES_FOLDER}/{self.__subfolder}/data")
-
         # Run the git ls-files command and capture the output
         output = subprocess.check_output(
             [
