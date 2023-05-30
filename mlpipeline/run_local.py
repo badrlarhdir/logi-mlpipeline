@@ -16,7 +16,7 @@ def run_local(pipeline: str):
     """
 
     def find_all_dvc_files_and_pull_them():
-        """Find all dvc.yaml files in the project and pull them"""
+        """Find all .dvc files in the project and pull them"""
 
         data_folder = "data"  # Specify the path to the data folder
         dvc_files = []

@@ -72,7 +72,7 @@ class PackageBuilder:
         # Remove any empty elements from the list
         file_paths = [path for path in file_paths if path]
 
-        # Specify the destination folder where you want to copy the files
+        # Specify the destination folder where we want to copy the files
         destination_folder = f"{PIPELINES_FOLDER}/{self.__subfolder}"
 
         # Get the root path of the Git repository
