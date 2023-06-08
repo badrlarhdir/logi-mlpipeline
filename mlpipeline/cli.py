@@ -174,16 +174,17 @@ def __publish(pipeline: str, message: str):
     "--instance_type", "-i", help="EC2 instance type", required=False
 )
 @click.option(
-    "--size", "-s", help="EC2 instance type", required=False, type=int
+    "--size", "-s", help="EC2 instance size", required=False, type=int
 )
-def __run_cloud(pipeline: str, instance_type: str, size: int):
+@click.option("--branch", "-b", help="Branch name", required=False, type=str)
+def __run_cloud(pipeline: str, instance_type: str, size: int, branch: str):
     """Run the pipeline on the cloud
 
     Param
         pipeline (str): name of the pipeline
     """
 
-    run_cloud(pipeline, instance_type, size)
+    run_cloud(pipeline, instance_type, size, branch)
 
 
 @click.command("cloud_status")

@@ -1,3 +1,4 @@
+import json
 import os
 import subprocess
 
@@ -7,7 +8,7 @@ from .default import get_default_pipeline
 
 
 def run_pipeline_cloud(
-    pipeline: str, instance_type: str, ec2_target_size: int
+    pipeline: str, instance_type: str, ec2_target_size: int, branch: str
 ):
     token = os.getenv("GITHUB_TOKEN")
 
@@ -16,16 +17,16 @@ def run_pipeline_cloud(
         return
 
     headers = {
-        "Accept": "application/vnd.github+json",
+        "Accept": "application/vnd.github.v3+json",
         "Authorization": f"token {token}",
-        "X-GitHub-Api-Version": "2022-11-28",
     }
 
-    data = {
-        "event_type": f"mlpipeline-{pipeline}",
-        "client_payload": {
+    payload = {
+        "ref": branch,
+        "inputs": {
             "EC2_INSTANCE_TYPE": instance_type,
-            "EC2_TARGET_SIZE": ec2_target_size,
+            "EC2_TARGET_SIZE": str(ec2_target_size),
+            "PIPELINE": pipeline,
         },
     }
 
@@ -42,10 +43,11 @@ def run_pipeline_cloud(
 
     print("Running pipeline", pipeline, "...")
 
+    # Run workflow_dispatch event
     response = requests.post(
-        f"https://api.github.com/repos/{repo}/dispatches",
+        f"https://api.github.com/repos/{repo}/actions/workflows/matrix.yaml/dispatches",
         headers=headers,
-        json=data,
+        json=payload,
     )
 
     if response.status_code != 204:
@@ -56,7 +58,9 @@ def run_pipeline_cloud(
     print(response.text)
 
 
-def run_cloud(pipeline: str, instance_type: str, ec2_target_size: int):
+def run_cloud(
+    pipeline: str, instance_type: str, ec2_target_size: int, branch: str
+):
     """Run the pipeline on the cloud
 
     Parameters
@@ -70,10 +74,46 @@ def run_cloud(pipeline: str, instance_type: str, ec2_target_size: int):
             return
 
     if not instance_type:
-        instance_type = "t2.micro"
+        instance_type = "['t2.micro']"
 
     if not ec2_target_size:
         ec2_target_size = 30
 
-    run_pipeline_cloud(pipeline, instance_type, ec2_target_size)
+    # Get the default branch name with an API call to github
+    if not branch:
+        # Get the repository name from the remote url
+        repo = (
+            subprocess.check_output(
+                ["git", "config", "--get", "remote.origin.url"]
+            )
+            .decode("utf-8")
+            .strip()
+        )
+        repo = repo.split("/")[-2:]
+        repo = "/".join(repo).replace(".git", "")
+
+        url = f"https://api.github.com/repos/Logitech/sw-data-mlops-internship"
+
+        token = os.getenv("GITHUB_TOKEN")
+
+        headers = {
+            "Accept": "application/vnd.github.v3+json",
+            "Authorization": f"token {token}",
+        }
+
+        response = requests.get(url, headers=headers)
+
+        if response.status_code == 200:
+            repo_info = json.loads(response.text)
+            branch = repo_info["default_branch"]
+            if not branch:
+                print("Failed to fetch the default branch of the repository")
+                return
+        else:
+            print(
+                f"Failed to fetch repository information. Status code: {response.status_code}"
+            )
+            return
+
+    run_pipeline_cloud(pipeline, instance_type, ec2_target_size, branch)
     return
