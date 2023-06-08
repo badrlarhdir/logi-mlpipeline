@@ -100,17 +100,42 @@ class ReportBuilder:
         ) as base_f:
             data_self_hosted_runner = yaml.safe_load(base_f)
 
+        # Add the reusable pipeline job in matrix.yaml
+        with open(
+            os.path.join(os.path.dirname(__file__), "resources/matrix.yaml"),
+            "r",
+        ) as matrix_f:
+            data_matrix_f = yaml.safe_load(matrix_f)
+
+            if subfolder:
+                data_matrix_f["jobs"][subfolder] = {
+                    "if": "${{ contains(github.event.inputs.PIPELINE, "
+                    + f"'{subfolder}')"
+                    + " }}",
+                    "strategy": {
+                        "matrix": {
+                            "EC2_INSTANCE_TYPE": "${{ fromJson(github.event.inputs.EC2_INSTANCE_TYPE) }}"
+                        }
+                    },
+                    "uses": f"./.github/workflows/{subfolder}.yaml",
+                    "with": {
+                        "EC2_INSTANCE_TYPE": "${{ matrix.EC2_INSTANCE_TYPE }}",
+                        "EC2_TARGET_SIZE": "${{ github.event.inputs.EC2_TARGET_SIZE }}",
+                    },
+                    "secrets": {
+                        "GH_PERSONAL_ACCESS_TOKEN": "${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}"
+                    },
+                }
+
+        with open("./.github/workflows/matrix.yaml", "w") as matrix_f:
+            yaml.dump(
+                data_matrix_f,
+                matrix_f,
+                sort_keys=False,
+            )
+
         # Add the report commands to the GHA job for the self hosted runner
         self.__report_cmds += "cml comment create report.md\n"
-        data_self_hosted_runner["on"] = {
-            "repository_dispatch": {
-                "types": [
-                    "mlpipeline-main"
-                    if not subfolder
-                    else f"mlpipeline-{subfolder}"
-                ],
-            }
-        }
         data_self_hosted_runner["jobs"]["pipeline"]["steps"][-1][
             "run"
         ] = self.__report_cmds
@@ -171,9 +196,7 @@ class ReportBuilder:
             )
 
             # Set the name of the GHA jobs
-            data_self_hosted_runner[
-                "name"
-            ] = f"{subfolder} Self Hosted Runner ML-pipeline"
+            data_self_hosted_runner["name"] = f"{subfolder} pipeline"
 
             # Set the working directory for the self hosted runner to
             # the pipeline folder
@@ -189,37 +212,35 @@ class ReportBuilder:
             )
         pathlib.Path(gh_workflows_path).mkdir(parents=True, exist_ok=True)
 
-        # Create the job (.yaml) files for both self hosted runner & github hosted runner
+        # Create the job (.yaml) files for both self hosted runner
 
         # If the subfolder doesn't exist, it means that the report is for the main repo,
         # otherwise for a pipeline
         if not subfolder:
-            # Copy the self-hosted-runner.yaml to the main repo
-            with open(
-                gh_workflows_path / "self-hosted-runner.yaml", "w"
-            ) as self_hosted_runner_f:
+            # Copy the main.yaml to the main repo
+            with open(gh_workflows_path / "main.yaml", "w") as main_f:
                 yaml.dump(
                     data_self_hosted_runner,
-                    self_hosted_runner_f,
+                    main_f,
                     sort_keys=False,
                 )
         else:
-            # Copy the self-hosted-runner.yamlto the subfolder repo
+            # Copy the subfolder.yaml pipeline to the subfolder repo
             with open(
-                gh_workflows_path / f"{subfolder}-self-hosted-runner.yaml", "w"
-            ) as self_hosted_runner_f:
+                gh_workflows_path / f"{subfolder}.yaml", "w"
+            ) as subfolder_f:
                 yaml.dump(
                     data_self_hosted_runner,
-                    self_hosted_runner_f,
+                    subfolder_f,
                     sort_keys=False,
                 )
             # Copy the file to the main repo too
             with open(
-                f"./.github/workflows/{subfolder}-self-hosted-runner.yaml", "w"
-            ) as self_hosted_runner_f:
+                f"./.github/workflows/{subfolder}.yaml", "w"
+            ) as subfolder_f:
                 yaml.dump(
                     data_self_hosted_runner,
-                    self_hosted_runner_f,
+                    subfolder_f,
                     sort_keys=False,
                 )
 

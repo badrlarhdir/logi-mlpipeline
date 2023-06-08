@@ -1,5 +1,20 @@
-name: Self Hosted Runner ML-pipeline
-'on': workflow_dispatch
+name: Main pipeline
+'on': 
+  workflow_call:
+    inputs:
+      EC2_INSTANCE_TYPE:
+        description: 'EC2 instance type'
+        required: true
+        type: string
+      EC2_TARGET_SIZE:
+        description: 'EC2 target size'
+        required: true
+        type: 'string'
+        default: '30'
+    secrets:
+      GH_PERSONAL_ACCESS_TOKEN:
+        description: 'GitHub Personal Access Token'
+        required: true
 concurrency: 
   # Only one workflow run is allowed to run at a time in the repository
   group: ${{ github.repository }}
@@ -19,6 +34,9 @@ jobs:
           role-to-assume: ${{ vars.ROLE_TO_ASSUME }}
           role-session-name: ${{ vars.ROLE_SESSION_NAME }}
           aws-region: ${{ vars.AWS_REGION }}
+      - name: Convert EC2_TARGET_SIZE to int
+        id: convert-ec2-target-size
+        run: echo "EC2_TARGET_SIZE=${{ inputs.EC2_TARGET_SIZE }}" >> $GITHUB_OUTPUT
       - name: Start EC2 runner
         id: start-ec2-runner
         uses: badrlarhdir/ec2-github-runner@v3
@@ -26,10 +44,10 @@ jobs:
           mode: start
           github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
           ec2-image-id: ${{ vars.EC2_IMAGE_ID }}
-          ec2-instance-type: ${{ github.event.client_payload.EC2_INSTANCE_TYPE }}
+          ec2-instance-type: ${{ inputs.EC2_INSTANCE_TYPE }}
           subnet-id: ${{ vars.SUBNET_ID }}
           security-group-id: ${{ vars.SECURITY_GROUP_ID }}
-          root-volume-size: ${{ github.event.client_payload.EC2_TARGET_SIZE }}
+          root-volume-size: ${{ steps.convert-ec2-target-size.outputs.EC2_TARGET_SIZE }}
   pipeline:
     name: Runs the ML Pipeline
     needs: start-runner # required to start the main job when the runner is ready
@@ -41,8 +59,8 @@ jobs:
         run: 'echo "role-to-assume : ${{ vars.ROLE_TO_ASSUME }}"
           echo "role-session-name: ${{ vars.ROLE_SESSION_NAME }}"
           echo "aws-region: ${{ vars.AWS_REGION }}"
-          echo "ec2_instance_type: ${{ github.event.client_payload.EC2_INSTANCE_TYPE }}"
-          echo "ec2_target_size: ${{ github.event.client_payload.EC2_TARGET_SIZE }}"
+          echo "ec2_instance_type: ${{ inputs.EC2_INSTANCE_TYPE }}"
+          echo "ec2_target_size: ${{ inputs.EC2_TARGET_SIZE }}"
           '
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
