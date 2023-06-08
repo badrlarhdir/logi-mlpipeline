@@ -109,9 +109,7 @@ class ReportBuilder:
 
             if subfolder:
                 data_matrix_f["jobs"][subfolder] = {
-                    "if": "${{ contains(github.event.inputs.PIPELINE, "
-                    + f"'{subfolder}')"
-                    + " }}",
+                    "if": f"github.event.inputs.PIPELINE == '{subfolder}'",
                     "strategy": {
                         "matrix": {
                             "EC2_INSTANCE_TYPE": "${{ fromJson(github.event.inputs.EC2_INSTANCE_TYPE) }}"
