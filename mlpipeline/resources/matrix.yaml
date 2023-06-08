@@ -19,7 +19,7 @@ permissions: write-all
 
 jobs:
   main:
-    if: ${{ contains(github.event.inputs.PIPELINE, 'main') }}
+    if: github.event.inputs.PIPELINE == 'main'
     strategy:
       matrix:
         EC2_INSTANCE_TYPE: ${{ fromJson(github.event.inputs.EC2_INSTANCE_TYPE) }}
