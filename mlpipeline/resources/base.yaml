@@ -15,10 +15,6 @@ name: Main pipeline
       GH_PERSONAL_ACCESS_TOKEN:
         description: 'GitHub Personal Access Token'
         required: true
-concurrency: 
-  # Only one workflow run is allowed to run at a time in the repository
-  group: ${{ github.repository }}
-  cancel-in-progress: true
 permissions: write-all
 jobs:
   start-runner:

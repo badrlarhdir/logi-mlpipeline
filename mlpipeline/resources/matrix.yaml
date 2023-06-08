@@ -16,7 +16,10 @@ name: Multi Self Hosted Runner ML-pipeline
         required: true
         default: main
 permissions: write-all
-
+concurrency: 
+  # Only one workflow run is allowed to run at a time in the repository
+  group: ${{ github.repository }}
+  cancel-in-progress: true
 jobs:
   main:
     if: github.event.inputs.PIPELINE == 'main'
