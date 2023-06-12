@@ -39,16 +39,13 @@ def delete_file_or_folder(path: str, delete: bool = False):
             os.remove(path)
 
 
-def upload_folder_to_s3(
-    s3_bucket_name: str, s3_folder: str, folder_path: str, execution_name: str
-):
+def upload_folder_to_s3(s3_bucket_name: str, s3_folder: str, folder_path: str):
     """
     Upload the outputs of the pipeline to an s3 bucket
     Parameters
         s3_bucket_name: the name of the s3 bucket
         s3_folder: the name of the folder in the s3 bucket
         folder_path: the path of the folder to upload
-        execution_name: the name of the execution
     """
     # Push the files to s3
 
@@ -69,7 +66,9 @@ def upload_folder_to_s3(
         else ""
     )
 
-    folder_name = f"{s3_folder}/{ec2_instance_type}{experiment_id}{date_string}_{execution_name}/"
+    folder_name = (
+        f"{s3_folder}/{ec2_instance_type}{experiment_id}{date_string}/"
+    )
 
     # Upload the contents of the local folder to S3
     for subdir, _, files in os.walk(folder_path):
