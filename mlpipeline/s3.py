@@ -66,9 +66,13 @@ def upload_folder_to_s3(s3_bucket_name: str, s3_folder: str, folder_path: str):
         else ""
     )
 
-    folder_name = (
-        f"{s3_folder}/{ec2_instance_type}{experiment_id}{date_string}/"
-    )
+    # if s3_folder is empty string then don't add a slash
+    if s3_folder:
+        folder_name = (
+            f"{s3_folder}/{ec2_instance_type}{experiment_id}{date_string}/"
+        )
+    else:
+        folder_name = f"{ec2_instance_type}{experiment_id}{date_string}/"
 
     # Upload the contents of the local folder to S3
     for subdir, _, files in os.walk(folder_path):
