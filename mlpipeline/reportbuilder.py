@@ -105,13 +105,15 @@ class ReportBuilder:
 
         # Add the reusable pipeline job in matrix.yaml
         with open(
-            os.path.join(os.path.dirname(__file__), "resources/matrix.yaml"),
+            os.path.join(
+                os.path.dirname(__file__), "resources/matrix_runner.yaml"
+            ),
             "r",
-        ) as matrix_f:
-            data_matrix_f = yaml.safe_load(matrix_f)
+        ) as matrix_runner_f:
+            data_matrix_runner_f = yaml.safe_load(matrix_runner_f)
 
             if subfolder:
-                data_matrix_f["jobs"][subfolder] = {
+                data_matrix_runner_f["jobs"][subfolder] = {
                     "if": f"github.event.inputs.PIPELINE == '{subfolder}'",
                     "strategy": {
                         "matrix": {
@@ -128,10 +130,12 @@ class ReportBuilder:
                     },
                 }
 
-        with open("./.github/workflows/matrix.yaml", "w") as matrix_f:
+        with open(
+            "./.github/workflows/matrix_runner.yaml", "w"
+        ) as matrix_runner_f:
             yaml.dump(
-                data_matrix_f,
-                matrix_f,
+                data_matrix_runner_f,
+                matrix_runner_f,
                 sort_keys=False,
             )
 
@@ -157,7 +161,9 @@ class ReportBuilder:
                     },
                 }
 
-        with open("./.github/workflows/matrix.yaml", "w") as single_runner_f:
+        with open(
+            "./.github/workflows/single_runner.yaml", "w"
+        ) as single_runner_f:
             yaml.dump(
                 data_single_runner_f,
                 single_runner_f,
