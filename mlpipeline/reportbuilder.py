@@ -124,6 +124,7 @@ class ReportBuilder:
                     "with": {
                         "EC2_INSTANCE_TYPE": "${{ matrix.EC2_INSTANCE_TYPE }}",
                         "EC2_TARGET_SIZE": "${{ github.event.inputs.EC2_TARGET_SIZE }}",
+                        "EXPERIMENT_ID": "${{ github.event.inputs.EXPERIMENT_ID }}",
                     },
                     "secrets": {
                         "GH_PERSONAL_ACCESS_TOKEN": "${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}"
@@ -155,6 +156,7 @@ class ReportBuilder:
                     "with": {
                         "EC2_INSTANCE_TYPE": "${{ github.event.inputs.EC2_INSTANCE_TYPE }}",
                         "EC2_TARGET_SIZE": "${{ github.event.inputs.EC2_TARGET_SIZE }}",
+                        "EXPERIMENT_ID": "${{ github.event.inputs.EXPERIMENT_ID }}",
                     },
                     "secrets": {
                         "GH_PERSONAL_ACCESS_TOKEN": "${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}"

@@ -11,6 +11,10 @@ name: Main pipeline
         required: true
         type: 'string'
         default: '30'
+      EXPERIMENT_ID:
+        description: Experiment ID to identify the run in S3
+        required: true
+        type: string
     secrets:
       GH_PERSONAL_ACCESS_TOKEN:
         description: 'GitHub Personal Access Token'
@@ -48,6 +52,10 @@ jobs:
     name: Runs the ML Pipeline
     needs: start-runner # required to start the main job when the runner is ready
     runs-on: ${{ needs.start-runner.outputs.label }} # run the job on the newly created runner
+    env:
+      EC2_INSTANCE_TYPE: ${{ inputs.EC2_INSTANCE_TYPE }}
+      EC2_TARGET_SIZE: ${{ inputs.EC2_TARGET_SIZE }}
+      EXPERIMENT_ID: ${{ inputs.EXPERIMENT_ID }}
     steps:
       - uses: actions/checkout@v3
       - uses: fregante/setup-git-user@v1
