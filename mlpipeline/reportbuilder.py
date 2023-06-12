@@ -95,6 +95,9 @@ class ReportBuilder:
     def __save_report(self, subfolder: str = None):
         """Save the cml report"""
 
+        # If ./.github/workflows/ folder doesn't exist, create it
+        pathlib.Path("./.github/workflows").mkdir(parents=True, exist_ok=True)
+
         with open(
             os.path.join(os.path.dirname(__file__), "resources/base.yaml"), "r"
         ) as base_f:
@@ -129,6 +132,35 @@ class ReportBuilder:
             yaml.dump(
                 data_matrix_f,
                 matrix_f,
+                sort_keys=False,
+            )
+
+        # Add the reusable pipeline job in single.yaml
+        with open(
+            os.path.join(
+                os.path.dirname(__file__), "resources/single_runner.yaml"
+            ),
+            "r",
+        ) as single_runner_f:
+            data_single_runner_f = yaml.safe_load(single_runner_f)
+
+            if subfolder:
+                data_single_runner_f["jobs"][subfolder] = {
+                    "if": f"github.event.inputs.PIPELINE == '{subfolder}'",
+                    "uses": f"./.github/workflows/{subfolder}.yaml",
+                    "with": {
+                        "EC2_INSTANCE_TYPE": "${{ github.event.inputs.EC2_INSTANCE_TYPE }}",
+                        "EC2_TARGET_SIZE": "${{ github.event.inputs.EC2_TARGET_SIZE }}",
+                    },
+                    "secrets": {
+                        "GH_PERSONAL_ACCESS_TOKEN": "${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}"
+                    },
+                }
+
+        with open("./.github/workflows/matrix.yaml", "w") as single_runner_f:
+            yaml.dump(
+                data_single_runner_f,
+                single_runner_f,
                 sort_keys=False,
             )
 

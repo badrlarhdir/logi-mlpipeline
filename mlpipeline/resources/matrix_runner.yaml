@@ -1,4 +1,4 @@
-name: Multi Self Hosted Runner ML-pipeline
+name: Multi Runner Pipeline
 'on':
   workflow_dispatch:
     inputs:

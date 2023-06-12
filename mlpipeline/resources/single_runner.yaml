@@ -1,0 +1,31 @@
+name: Single Runner Pipeline
+'on':
+  workflow_dispatch:
+    inputs:
+      EC2_INSTANCE_TYPE:
+        description: 'EC2 instance type e.g: t2.micro or t2.medium'
+        required: true
+        default: 't2.micro'
+      EC2_TARGET_SIZE:
+        description: EC2 target size
+        required: true
+        type: string
+        default: '30'
+      PIPELINE:
+        description: Pipeline name to run
+        required: true
+        default: main
+permissions: write-all
+concurrency: 
+  # Only one workflow run is allowed to run at a time in the repository
+  group: ${{ github.repository }}
+  cancel-in-progress: true
+jobs:
+  main:
+    if: github.event.inputs.PIPELINE == 'main'
+    uses: ./.github/workflows/main.yaml
+    with:
+      EC2_INSTANCE_TYPE: ${{ github.event.inputs.EC2_INSTANCE_TYPE }}
+      EC2_TARGET_SIZE: ${{ github.event.inputs.EC2_TARGET_SIZE }}
+    secrets:
+      GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
