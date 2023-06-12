@@ -58,7 +58,18 @@ def upload_folder_to_s3(
 
     # Define bucket and folder names
     date_string = datetime.now().strftime("%a_%B_%d_%Y_%H-%M-%S_UTC")
-    folder_name = f"{s3_folder}/{date_string}_{execution_name}/"
+    experiment_id = (
+        f'{os.environ.get("EXPERIMENT_ID")}_'
+        if os.environ.get("EXPERIMENT_ID")
+        else ""
+    )
+    ec2_instance_type = (
+        f'{os.environ.get("EC2_INSTANCE_TYPE")}_'
+        if os.environ.get("EC2_INSTANCE_TYPE")
+        else ""
+    )
+
+    folder_name = f"{s3_folder}/{ec2_instance_type}{experiment_id}{date_string}_{execution_name}/"
 
     # Upload the contents of the local folder to S3
     for subdir, _, files in os.walk(folder_path):
