@@ -16,9 +16,11 @@ name: Single Runner
         required: true
         type: string
       PIPELINE:
+        type : choice
         description: Pipeline to run
         required: true
-        default: main
+        options: 
+        - main
 permissions: write-all
 concurrency: 
   # Only one workflow run is allowed to run at a time in the repository
