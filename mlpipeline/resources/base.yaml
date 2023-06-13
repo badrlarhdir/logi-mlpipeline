@@ -39,7 +39,7 @@ jobs:
         run: echo "EC2_TARGET_SIZE=${{ inputs.EC2_TARGET_SIZE }}" >> $GITHUB_OUTPUT
       - name: Start EC2 runner
         id: start-ec2-runner
-        uses: badrlarhdir/ec2-github-runner@v3
+        uses: badrlarhdir/ec2-github-runner@v4
         with:
           mode: start
           github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
@@ -112,7 +112,7 @@ jobs:
           role-session-name: ${{ vars.ROLE_SESSION_NAME }}
           aws-region: ${{ vars.AWS_REGION }}
       - name: Stop EC2 runner
-        uses: badrlarhdir/ec2-github-runner@v3
+        uses: badrlarhdir/ec2-github-runner@v4
         with:
           mode: stop
           github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
