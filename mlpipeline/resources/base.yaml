@@ -66,6 +66,10 @@ jobs:
           echo "ec2_instance_type: ${{ inputs.EC2_INSTANCE_TYPE }}"
           echo "ec2_target_size: ${{ inputs.EC2_TARGET_SIZE }}"
           '
+      - name: Install AWSCLI
+        run: |
+          python -m pip install --upgrade pip
+          pip install awscli
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
