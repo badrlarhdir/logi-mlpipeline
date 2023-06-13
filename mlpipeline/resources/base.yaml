@@ -97,6 +97,19 @@ jobs:
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ github.token }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ vars.ROLE_TO_ASSUME }}
+          role-session-name: ${{ vars.ROLE_SESSION_NAME }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - name: Upload artifacts to S3
+        run: |
+          date_string=$(date -u +"%a_%B_%d_%Y_%H-%M-%S_UTC")
+
+          s3_folder_uri="${{ vars.S3_OUTPUT_URI }}/${{ inputs.EC2_INSTANCE_TYPE }}_${{ inputs.EXPERIMENT_ID }}_${date_string}"
+
+          aws s3 cp ../outputs "s3://${s3_folder_uri}" --recursive
   stop-runner:
     name: Stop self-hosted EC2 runner
     needs:

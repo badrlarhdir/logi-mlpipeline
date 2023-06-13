@@ -174,7 +174,8 @@ class ReportBuilder:
 
         # Add the report commands to the GHA job for the self hosted runner
         self.__report_cmds += "cml comment create report.md\n"
-        data_self_hosted_runner["jobs"]["pipeline"]["steps"][-1][
+        # -3 is the index of the "DVC pipeline & CML job" step
+        data_self_hosted_runner["jobs"]["pipeline"]["steps"][-3][
             "run"
         ] = self.__report_cmds
 
