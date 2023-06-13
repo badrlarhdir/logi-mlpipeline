@@ -107,7 +107,7 @@ jobs:
         run: |
           date_string=$(date -u +"%a_%B_%d_%Y_%H-%M-%S_UTC")
 
-          s3_folder_uri="${{ vars.S3_OUTPUT_URI }}/${{ inputs.EC2_INSTANCE_TYPE }}_${{ inputs.EXPERIMENT_ID }}_${date_string}"
+          s3_folder_uri="${{vars.S3_OUTPUT_URI}}/${{inputs.EC2_INSTANCE_TYPE}}_${{inputs.EXPERIMENT_ID}}_${date_string}"
 
           aws s3 cp ../outputs "s3://${s3_folder_uri}" --recursive
   stop-runner:
