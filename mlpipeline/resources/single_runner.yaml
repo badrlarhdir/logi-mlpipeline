@@ -22,7 +22,7 @@ name: Single Runner
 permissions: write-all
 concurrency: 
   # Only one workflow run is allowed to run at a time in the repository
-  group: ${{ github.repository }}
+  group: single_runner
   cancel-in-progress: true
 jobs:
   main:

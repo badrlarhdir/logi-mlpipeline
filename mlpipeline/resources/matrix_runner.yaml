@@ -22,7 +22,7 @@ name: Multi Runner
 permissions: write-all
 concurrency: 
   # Only one workflow run is allowed to run at a time in the repository
-  group: ${{ github.repository }}
+  group: matrix_runner
   cancel-in-progress: true
 jobs:
   main:
