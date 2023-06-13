@@ -1,22 +1,22 @@
-name: Single Runner Pipeline
+name: Single Runner
 'on':
   workflow_dispatch:
     inputs:
       EC2_INSTANCE_TYPE:
-        description: 'EC2 instance type e.g: t2.micro or t2.medium'
+        description: 'EC2 instance type (ex: t3.micro or t3.medium)'
         required: true
-        default: 't2.micro'
+        default: 'c6a.4xlarge'
       EC2_TARGET_SIZE:
-        description: EC2 target size
+        description: Storage allocated to the machine (in GB)
         required: true
         type: string
         default: '30'
       EXPERIMENT_ID:
-        description: Experiment ID to identify the run in S3
+        description: Experiment ID (to identify the run in S3)
         required: true
         type: string
       PIPELINE:
-        description: Pipeline name to run
+        description: Pipeline to run
         required: true
         default: main
 permissions: write-all
