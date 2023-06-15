@@ -140,9 +140,15 @@ class ReportBuilder:
                 }
 
                 # Add the pipeline to the options of the workflow_dispatch
-                data_matrix_runner_f["on"]["workflow_dispatch"]["inputs"][
-                    "PIPELINE"
-                ]["options"].append(subfolder)
+                if (
+                    subfolder
+                    not in data_matrix_runner_f["on"]["workflow_dispatch"][
+                        "inputs"
+                    ]["PIPELINE"]["options"]
+                ):
+                    data_matrix_runner_f["on"]["workflow_dispatch"]["inputs"][
+                        "PIPELINE"
+                    ]["options"].append(subfolder)
 
         with open(
             "./.github/workflows/matrix_runner.yaml", "w"
@@ -185,9 +191,15 @@ class ReportBuilder:
                 }
 
                 # Add the pipeline to the options of the workflow_dispatch
-                data_single_runner_f["on"]["workflow_dispatch"]["inputs"][
-                    "PIPELINE"
-                ]["options"].append(subfolder)
+                if (
+                    subfolder
+                    not in data_single_runner_f["on"]["workflow_dispatch"][
+                        "inputs"
+                    ]["PIPELINE"]["options"]
+                ):
+                    data_single_runner_f["on"]["workflow_dispatch"]["inputs"][
+                        "PIPELINE"
+                    ]["options"].append(subfolder)
 
         with open(
             "./.github/workflows/single_runner.yaml", "w"
