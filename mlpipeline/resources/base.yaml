@@ -49,7 +49,7 @@ jobs:
           security-group-id: ${{ vars.SECURITY_GROUP_ID }}
           root-volume-size: ${{ steps.convert-ec2-target-size.outputs.EC2_TARGET_SIZE }}
   pipeline:
-    timeout-minutes: 1440
+    timeout-minutes: 4320
     name: Runs the ML Pipeline
     needs: start-runner # required to start the main job when the runner is ready
     runs-on: ${{ needs.start-runner.outputs.label }} # run the job on the newly created runner
