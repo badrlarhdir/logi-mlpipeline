@@ -104,10 +104,18 @@ class ReportBuilder:
             data_self_hosted_runner = yaml.safe_load(base_f)
 
         # Add the reusable pipeline job in matrix.yaml
-        with open(
-            os.path.join(
+
+        # check if the matrix_runner.yaml file exists inside the .github/workflows folder
+        # if it doesn't exist, create it
+        if not pathlib.Path("./.github/workflows/matrix_runner.yaml").exists():
+            matrix_runner_path = os.path.join(
                 os.path.dirname(__file__), "resources/matrix_runner.yaml"
-            ),
+            )
+        else:
+            matrix_runner_path = "./.github/workflows/matrix_runner.yaml"
+
+        with open(
+            matrix_runner_path,
             "r",
         ) as matrix_runner_f:
             data_matrix_runner_f = yaml.safe_load(matrix_runner_f)
@@ -146,10 +154,18 @@ class ReportBuilder:
             )
 
         # Add the reusable pipeline job in single.yaml
-        with open(
-            os.path.join(
+
+        # check if the matrix_runner.yaml file exists inside the .github/workflows folder
+        # if it doesn't exist, create it
+        if not pathlib.Path("./.github/workflows/single_runner.yaml").exists():
+            single_runner_path = os.path.join(
                 os.path.dirname(__file__), "resources/single_runner.yaml"
-            ),
+            )
+        else:
+            single_runner_path = "./.github/workflows/single_runner.yaml"
+
+        with open(
+            single_runner_path,
             "r",
         ) as single_runner_f:
             data_single_runner_f = yaml.safe_load(single_runner_f)
