@@ -42,6 +42,8 @@ def sync_pipeline(pipeline: str):
         name of the pipeline
     """
 
+    print("Syncing pipeline", pipeline, "...")
+
     # Get the notebooks from the pipelines.json file
     pipelines_path = f"{PIPELINES_FOLDER}/pipelines.json"
     if pathlib.Path(pipelines_path).exists():
@@ -66,14 +68,37 @@ def sync_pipeline(pipeline: str):
     print(f"Pipeline {pipeline} synced")
 
 
-def sync(notebooks: str, pipeline: str, force: bool):
+def sync(
+    notebooks: str | None,
+    pipeline: str | None,
+    force: bool | None,
+    all: bool | None,
+):
     """Sync the notebooks with the pipeline project or the main project
 
     Parameters
-        (optional) notebooks (str): list of notebooks in the pipeline
-        (optional) pipeline (str): name of the pipeline
-        (optional) force (bool): forces creation of a new params.yaml file
+        (optional) notebooks (str | None): list of notebooks in the pipeline
+        (optional) pipeline (str | None): name of the pipeline
+        (optional) force (bool | None): forces creation of a new params.yaml file
+        (optional) all (bool | None): sync all the pipelines (default: False)
     """
+
+    # Sync all the pipelines
+    if all:
+        # read the pipelines.json file and sync all the pipelines one by one
+        pipelines_path = f"{PIPELINES_FOLDER}/pipelines.json"
+        if pathlib.Path(pipelines_path).exists():
+            with open(pipelines_path, "r") as pipelines_f:
+                pipelines = json.load(pipelines_f)
+                for pipeline in pipelines:
+                    if pipeline != "default":
+                        sync(None, pipeline, True, False)
+
+                # Sync the default pipeline last to avoid overwriting the params.yaml file
+                default_pipeline = get_default_pipeline()
+                if default_pipeline:
+                    sync(None, default_pipeline, True, False)
+        return
 
     # remove the params.yaml file if force is True
     if force:
@@ -83,21 +108,19 @@ def sync(notebooks: str, pipeline: str, force: bool):
         )
 
     if pipeline:
-        print("Syncing pipeline", pipeline, "...")
         sync_pipeline(pipeline)
         return
     if notebooks:
         print("Syncing notebooks on main project", notebooks, "...")
-        notebooks = get_notebooks_from_str(notebooks)
-        sync_main_project(notebooks)
+        list_notebooks = get_notebooks_from_str(notebooks)
+        sync_main_project(list_notebooks)
         return
 
     # If no notebooks and no pipeline, sync the default pipeline
     if not notebooks and not pipeline:
-        pipeline = get_default_pipeline()
-        if pipeline:
-            print("Syncing pipeline", pipeline, "...")
-            sync_pipeline(pipeline)
+        default_pipeline = get_default_pipeline()
+        if default_pipeline:
+            sync_pipeline(default_pipeline)
             return
 
     print("Please specify a pipeline name to sync or a list of notebooks")

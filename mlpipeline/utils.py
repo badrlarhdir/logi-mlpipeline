@@ -18,7 +18,7 @@ def get_notebooks_from_str(notebooks_str: str) -> list[str]:
     )
 
 
-def get_default_pipeline():
+def get_default_pipeline() -> str | None:
     # Check if the default pipeline exists in the pipelines.json file
     pipelines_path = f"{PIPELINES_FOLDER}/pipelines.json"
     if pathlib.Path(pipelines_path).exists():

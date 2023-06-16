@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 import pathlib
 
@@ -61,15 +63,28 @@ def __init():
     help="Forces creation of a new params.yaml file",
     is_flag=True,
 )
-def __sync(notebooks: str, pipeline: str, force: bool):
+@click.option(
+    "--all",
+    "-a",
+    help="Sync all the pipelines",
+    is_flag=True,
+)
+def __sync(
+    notebooks: str | None,
+    pipeline: str | None,
+    force: bool | None,
+    all: bool | None,
+):
     """Sync the notebooks with the pipeline project or the main project
 
     Parameters
-        (optional) notebooks (str): list of notebooks in the pipeline
-        (optional) pipeline (str): name of the pipeline
+        (optional) notebooks (str | None): list of notebooks in the pipeline
+        (optional) pipeline (str | None): name of the pipeline
+        (optional) force (bool | None): forces creation of a new params.yaml file (default: False)
+        (optional) all (bool | None): sync all the pipelines (default: False)
     """
 
-    sync(notebooks, pipeline, force)
+    sync(notebooks, pipeline, force, all)
 
 
 @click.command("delete")
