@@ -33,7 +33,7 @@ jobs:
         security-group-id: ${{ vars.SECURITY_GROUP_ID }}
         root-volume-size: ${{ github.event.client_payload.EC2_TARGET_SIZE }}
   pipeline:
-    name: Runs the ML Pipeline
+    name: Run the Pipeline
     needs: start-runner
     runs-on: ${{ needs.start-runner.outputs.label }}
     steps:
