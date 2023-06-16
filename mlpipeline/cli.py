@@ -55,7 +55,13 @@ def __init():
 @click.command("sync")
 @click.option("--notebooks", "-n", help="List of notebooks in the pipeline")
 @click.option("--pipeline", "-p", help="Name of the pipeline")
-def __sync(notebooks: str, pipeline: str):
+@click.option(
+    "--force",
+    "-f",
+    help="Forces creation of a new params.yaml file",
+    is_flag=True,
+)
+def __sync(notebooks: str, pipeline: str, force: bool):
     """Sync the notebooks with the pipeline project or the main project
 
     Parameters
@@ -63,14 +69,14 @@ def __sync(notebooks: str, pipeline: str):
         (optional) pipeline (str): name of the pipeline
     """
 
-    sync(notebooks, pipeline)
+    sync(notebooks, pipeline, force)
 
 
 @click.command("delete")
 @click.option("--pipeline", "-p", help="Name of the pipeline", required=False)
 @click.option("--all", "-a", help="Remove all pipelines", is_flag=True)
 def __delete(pipeline: str, all: bool):
-    """Delete a pipeline or all the pipelines
+    """Deletes a pipeline or all the pipelines
 
     Param
         (optional) pipeline (str): name of the pipeline

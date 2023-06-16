@@ -66,13 +66,21 @@ def sync_pipeline(pipeline: str):
     print(f"Pipeline {pipeline} synced")
 
 
-def sync(notebooks: str, pipeline: str):
+def sync(notebooks: str, pipeline: str, force: bool):
     """Sync the notebooks with the pipeline project or the main project
 
     Parameters
         (optional) notebooks (str): list of notebooks in the pipeline
         (optional) pipeline (str): name of the pipeline
+        (optional) force (bool): forces creation of a new params.yaml file
     """
+
+    # remove the params.yaml file if force is True
+    if force:
+        pathlib.Path("params.yaml").unlink(missing_ok=True)
+        pathlib.Path(f"{PIPELINES_FOLDER}/{pipeline}/params.yaml").unlink(
+            missing_ok=True
+        )
 
     if pipeline:
         print("Syncing pipeline", pipeline, "...")
