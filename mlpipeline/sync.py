@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import pathlib
+import shutil
 
 from .globals import PIPELINES_FOLDER
 from .packagebuilder import setup_package
@@ -86,10 +87,12 @@ def sync(
     # Sync all the pipelines
     if all:
         if force:
-            # delete all the folders in the pipelines folder
-            for folder in pathlib.Path(PIPELINES_FOLDER).iterdir():
-                if folder.is_dir():
-                    folder.rmdir()
+            # delete all the folders in the pipelines folder even if the folder is not empty using shutil.rmtree
+            shutil.rmtree(pathlib.Path(PIPELINES_FOLDER), ignore_errors=True)
+
+            # remove all the files inside .github/workflows
+            for file in pathlib.Path(".github/workflows").iterdir():
+                file.unlink()
 
         # read the pipelines.json file and sync all the pipelines one by one
         pipelines_path = f"{PIPELINES_FOLDER}/pipelines.json"
