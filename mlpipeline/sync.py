@@ -88,7 +88,9 @@ def sync(
     if all:
         if force:
             # delete all the folders in the pipelines folder even if the folder is not empty using shutil.rmtree
-            shutil.rmtree(pathlib.Path(PIPELINES_FOLDER), ignore_errors=True)
+            shutil.rmtree(
+                pathlib.Path(f"{PIPELINES_FOLDER}/"), ignore_errors=True
+            )
 
             # remove all the files inside .github/workflows
             for file in pathlib.Path(".github/workflows").iterdir():
