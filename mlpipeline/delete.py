@@ -3,11 +3,13 @@ import os
 import pathlib
 import shutil
 
+import yaml
+
 from .globals import DEFAULT_PIPELINE, PIPELINES_FOLDER
 
 
 def delete_pipeline(pipeline: str):
-    """Delete the chosen pipeline folder and the GHA files
+    """Deletes the chosen pipeline folder and the GHA files
     Parameters
     ----------
     pipeline:  str
@@ -29,6 +31,50 @@ def delete_pipeline(pipeline: str):
             if file_name.startswith(prefix):
                 file_path = os.path.join(gha_path, file_name)
                 os.remove(file_path)
+
+    # Remove the pipeline from the matrix_runner.yaml file
+    if pathlib.Path("./.github/workflows/matrix_runner.yaml").exists():
+        with open(
+            "./.github/workflows/matrix_runner.yaml",
+            "r",
+        ) as matrix_runner_f:
+            data_matrix_runner_f = yaml.safe_load(matrix_runner_f)
+
+        if "jobs" in data_matrix_runner_f:
+            if pipeline in data_matrix_runner_f["jobs"]:
+                data_matrix_runner_f["jobs"].pop(pipeline)
+
+        data_matrix_runner_f["on"]["workflow_dispatch"]["inputs"]["PIPELINE"][
+            "options"
+        ].remove(pipeline)
+
+        with open(
+            "./.github/workflows/matrix_runner.yaml",
+            "w",
+        ) as matrix_runner_f:
+            yaml.dump(data_matrix_runner_f, matrix_runner_f, sort_keys=False)
+
+    # Remove the pipeline from the single_runner.yaml file
+    if pathlib.Path("./.github/workflows/single_runner.yaml").exists():
+        with open(
+            "./.github/workflows/single_runner.yaml",
+            "r",
+        ) as single_runner_f:
+            data_single_runner_f = yaml.safe_load(single_runner_f)
+
+        if "jobs" in data_single_runner_f:
+            if pipeline in data_single_runner_f["jobs"]:
+                data_single_runner_f["jobs"].pop(pipeline)
+
+        data_single_runner_f["on"]["workflow_dispatch"]["inputs"]["PIPELINE"][
+            "options"
+        ].remove(pipeline)
+
+        with open(
+            "./.github/workflows/single_runner.yaml",
+            "w",
+        ) as single_runner_f:
+            yaml.dump(data_single_runner_f, single_runner_f, sort_keys=False)
 
     # Update the pipelines.json file
     pipelines_path = f"{PIPELINES_FOLDER}/pipelines.json"
