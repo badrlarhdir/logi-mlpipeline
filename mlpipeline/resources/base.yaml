@@ -98,7 +98,7 @@ jobs:
           #to make papermill work on the created virtualenv
           python -m ipykernel install --user --name venv --display-name 'venv'
 
-      - name: DVC pipeline & CML job
+      - name: Run the pipeline
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ github.token }}
