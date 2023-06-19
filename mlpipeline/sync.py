@@ -85,6 +85,12 @@ def sync(
 
     # Sync all the pipelines
     if all:
+        if force:
+            # delete all the folders in the pipelines folder
+            for folder in pathlib.Path(PIPELINES_FOLDER).iterdir():
+                if folder.is_dir():
+                    folder.rmdir()
+
         # read the pipelines.json file and sync all the pipelines one by one
         pipelines_path = f"{PIPELINES_FOLDER}/pipelines.json"
         if pathlib.Path(pipelines_path).exists():
