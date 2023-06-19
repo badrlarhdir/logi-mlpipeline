@@ -5,14 +5,12 @@ import pathlib
 
 import click
 
-from .cloud_status import *
 from .create import *
 from .default import *
 from .delete import *
 from .init import *
 from .link import *
 from .list import *
-from .publish import *
 from .run_cloud import *
 from .run_local import *
 from .set_github_token import *
@@ -173,22 +171,6 @@ def __set_default_pipeline(pipeline: str):
     set_default_pipeline(pipeline)
 
 
-@click.command("publish")
-@click.option("--pipeline", "-p", help="Name of the pipeline")
-@click.option(
-    "--message", "-m", help="Message of the publish event", required=True
-)
-def __publish(pipeline: str, message: str):
-    """Publish the selected pipeline to the remote repository
-        or publish the complete project if no pipeline is specified
-
-    Param
-        (optional) pipeline (str): name of the pipeline
-    """
-
-    publish(pipeline, message)
-
-
 @click.command("run_cloud")
 @click.option("--pipeline", "-p", help="Name of the pipeline", required=False)
 @click.option(
@@ -206,18 +188,6 @@ def __run_cloud(pipeline: str, instance_type: str, size: int, branch: str):
     """
 
     run_cloud(pipeline, instance_type, size, branch)
-
-
-@click.command("cloud_status")
-@click.option("--pipeline", "-p", help="Name of the pipeline", required=False)
-def __cloud_status(pipeline: str):
-    """Get the status of the cloud instance
-
-    Param
-        pipeline (str): name of the pipeline
-    """
-
-    cloud_status(pipeline)
 
 
 @click.command("set_token")
@@ -243,7 +213,5 @@ cli.add_command(__link)
 cli.add_command(__list_pipelines)
 cli.add_command(__run_local)
 cli.add_command(__set_default_pipeline)
-cli.add_command(__publish)
 cli.add_command(__run_cloud)
-cli.add_command(__cloud_status)
 cli.add_command(__set_github_token)
