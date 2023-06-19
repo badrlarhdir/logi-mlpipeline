@@ -212,8 +212,8 @@ class ReportBuilder:
 
         # Add the report commands to the GHA job for the self hosted runner
         self.__report_cmds += "cml comment create report.md\n"
-        # -3 is the index of the "Run the pipeline" step
-        data_self_hosted_runner["jobs"]["pipeline"]["steps"][-3][
+        # -2 is the index of the "Run the pipeline" step
+        data_self_hosted_runner["jobs"]["pipeline"]["steps"][-2][
             "run"
         ] = self.__report_cmds
 

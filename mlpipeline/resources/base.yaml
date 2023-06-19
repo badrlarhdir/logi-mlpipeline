@@ -67,13 +67,6 @@ jobs:
           echo "ec2_instance_type: ${{ inputs.EC2_INSTANCE_TYPE }}"
           echo "ec2_target_size: ${{ inputs.EC2_TARGET_SIZE }}"
           '
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: ${{ vars.ROLE_TO_ASSUME }}
-          role-session-name: ${{ vars.ROLE_SESSION_NAME }}
-          aws-region: ${{ vars.AWS_REGION }}
-          role-duration-seconds: 43200
       - uses: actions/setup-node@v3
         with:
           node-version: 16
@@ -102,13 +95,6 @@ jobs:
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ github.token }}
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: ${{ vars.ROLE_TO_ASSUME }}
-          role-session-name: ${{ vars.ROLE_SESSION_NAME }}
-          aws-region: ${{ vars.AWS_REGION }}
-          role-duration-seconds: 43200
       - name: Upload artifacts to S3
         run: |
           date_string=$(date -u +"%a_%B_%d_%Y_%H-%M-%S_UTC")
