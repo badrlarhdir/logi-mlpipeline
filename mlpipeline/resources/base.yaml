@@ -47,6 +47,7 @@ jobs:
           ec2-instance-type: ${{ inputs.EC2_INSTANCE_TYPE }}
           subnet-id: ${{ vars.SUBNET_ID }}
           security-group-id: ${{ vars.SECURITY_GROUP_ID }}
+          iam-role-name: ${{ vars.IAM_ROLE_NAME }}
           root-volume-size: ${{ steps.convert-ec2-target-size.outputs.EC2_TARGET_SIZE }}
   pipeline:
     timeout-minutes: 4320
