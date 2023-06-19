@@ -23,9 +23,8 @@ name: Multi Runner
         - main
 permissions: write-all
 concurrency: 
-  # Only one workflow run is allowed to run at a time in the repository
-  group: matrix_runner
-  cancel-in-progress: true
+  # Only one workflow per pipeline per experiment_id is allowed to run at a time in the repository
+  group: matrix_runner_${{ github.event.inputs.PIPELINE }}_${{ github.event.inputs.EXPERIMENT_ID }}
 jobs:
   main:
     if: github.event.inputs.PIPELINE == 'main'
