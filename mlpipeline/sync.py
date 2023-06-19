@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import pathlib
 import shutil
 
@@ -87,10 +88,14 @@ def sync(
     # Sync all the pipelines
     if all:
         if force:
-            # delete all the folders in the pipelines folder even if the folder is not empty using shutil.rmtree
-            shutil.rmtree(
-                pathlib.Path(f"{PIPELINES_FOLDER}/"), ignore_errors=True
-            )
+            # Iterate over all items in the folder
+            for item in os.listdir(PIPELINES_FOLDER):
+                item_path = os.path.join(PIPELINES_FOLDER, item)
+
+                # Check if the item is a directory
+                if os.path.isdir(item_path):
+                    # Use shutil.rmtree to delete the directory and its contents
+                    shutil.rmtree(item_path)
 
             # remove all the files inside .github/workflows
             for file in pathlib.Path(".github/workflows").iterdir():
