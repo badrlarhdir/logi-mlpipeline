@@ -78,7 +78,6 @@ jobs:
         with:
           node-version: 16
       - uses: iterative/setup-cml@v1
-      - uses: iterative/setup-dvc@v1
       - name: Install Python 3.9
         uses: actions/setup-python@v4
         with:
