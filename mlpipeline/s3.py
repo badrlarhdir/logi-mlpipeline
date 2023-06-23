@@ -6,7 +6,7 @@ from datetime import datetime
 import boto3
 
 
-def download_from_s3(s3_uri: str, local_path: str, download: bool = False):
+def download_dvc_from_s3(s3_uri: str, local_path: str, download: bool = False):
     """
     Download a file or directory from a s3 URL (s3://) into the local file system.
     Parameters
@@ -22,6 +22,19 @@ def download_from_s3(s3_uri: str, local_path: str, download: bool = False):
         )
     else:
         subprocess.run(["dvc", "import-url", s3_uri, local_path])
+
+
+def download_from_s3(s3_uri: str, local_path: str):
+    """
+    Download a file or directory from a s3 URL (s3://) into the local file system.
+    Parameters
+        s3_uri: the folder path in the s3 bucket or the s3 uri of the file
+        local_path: a relative directory path in the local file system (ex: ./data/sw_folder/) or
+            the local output name of the file with a specific path (ex: ./data/data.csv)
+    """
+    # Download the file from s3
+    # !aws s3 cp s3_uri local_path --recursive
+    subprocess.run(["aws", "s3", "cp", s3_uri, local_path, "--recursive"])
 
 
 def delete_file_or_folder(path: str, delete: bool = False):
