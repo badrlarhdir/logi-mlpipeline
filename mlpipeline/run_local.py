@@ -7,7 +7,7 @@ from .default import get_default_pipeline
 from .globals import PIPELINES_FOLDER
 from .sync import sync_pipeline
 
-RUN_PIPELINE_CMDS = ["dvc", "repro", "-f", "--no-commit"]
+RUN_PIPELINE_CMDS = ["dvc", "repro", "-f", "--no-commit", "--no-run-cache"]
 
 
 def run_local(pipeline: str):
