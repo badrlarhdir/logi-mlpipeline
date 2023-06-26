@@ -7,6 +7,8 @@ from .default import get_default_pipeline
 from .globals import PIPELINES_FOLDER
 from .sync import sync_pipeline
 
+RUN_PIPELINE_CMDS = ["dvc", "repro", "-f", "--no-commit"]
+
 
 def run_local(pipeline: str):
     """Run the dvc pipeline on the main project or on the selected pipeline
@@ -57,7 +59,7 @@ def run_local(pipeline: str):
     if pipeline == "main":
         print("Running main project...")
         find_all_dvc_files_and_pull_them()
-        subprocess.run(["dvc", "repro", "-f"])
+        subprocess.run(RUN_PIPELINE_CMDS)
 
         # Reset dvc.lock file
         subprocess.run(["git", "reset", "--", "dvc.lock"])
@@ -80,7 +82,7 @@ def run_local(pipeline: str):
         # Change directory to the pipeline using os.chdir()
         os.chdir(os.path.join(PIPELINES_FOLDER, pipeline))
         find_all_dvc_files_and_pull_them()
-        subprocess.run(["dvc", "repro", "-f"])
+        subprocess.run(RUN_PIPELINE_CMDS)
 
         path_pipeline_dvc_lock = f"./{PIPELINES_FOLDER}/{pipeline}/dvc.lock"
 
