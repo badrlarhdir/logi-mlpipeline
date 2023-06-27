@@ -182,7 +182,7 @@ class ReportBuilder:
                     "if": f"github.event.inputs.PIPELINE == '{subfolder}'",
                     "uses": f"./.github/workflows/{subfolder}.yaml",
                     "with": {
-                        "EC2_INSTANCE_TYPE": "${{ matrix.EC2_INSTANCE_TYPE }}",
+                        "EC2_INSTANCE_TYPE": "${{ github.event.inputs.EC2_INSTANCE_TYPE }}",
                         "EC2_TARGET_SIZE": "${{ github.event.inputs.EC2_TARGET_SIZE }}",
                         "EXPERIMENT_ID": "${{ github.event.inputs.EXPERIMENT_ID }}",
                         "DATE_EXECUTION_SUBFOLDER_BOOL": "${{github.event.inputs.DATE_EXECUTION_SUBFOLDER_BOOL}}",
