@@ -123,7 +123,7 @@ jobs:
           fi
 
           if [[ ${{inputs.DATE_EXECUTION_SUBFOLDER_BOOL}} == true ]]; then
-            date_string=$(date -u +"%d/%m/%Y_%H:%M:%S_UTC")
+            date_string=$(date -u +"%d.%m.%Y_%H:%M:%S_UTC")
             s3_folder_uri+="/${date_string}"
           fi
 
