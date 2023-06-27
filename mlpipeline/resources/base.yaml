@@ -15,6 +15,16 @@ name: Main pipeline
         description: Experiment ID to identify the run in S3
         required: true
         type: string
+      DATE_EXECUTION_SUBFOLDER_BOOL:
+        description: 'Put the output in a execution date subfolder (ex: 27/06/2023_10:30:45_UTC/)'
+        required: true
+        type: boolean
+        default: true
+      EC2_INSTANCE_TYPE_SUBFOLDER_BOOL:
+        description: 'Put the output in a EC2 instance type folder (ex: m5a.xlarge/)'
+        required: false
+        type: boolean
+        default: true
     secrets:
       GH_PERSONAL_ACCESS_TOKEN:
         description: 'GitHub Personal Access Token'
@@ -106,9 +116,16 @@ jobs:
           GH_TOKEN: ${{ github.token }}
       - name: Upload artifacts to S3
         run: |
-          date_string=$(date -u +"%a_%B_%d_%Y_%H-%M-%S_UTC")
+          s3_folder_uri="${{vars.S3_OUTPUT_FOLDER}}/${{inputs.EXPERIMENT_ID}}"
 
-          s3_folder_uri="${{vars.S3_OUTPUT_FOLDER}}/${{inputs.EXPERIMENT_ID}}/${{inputs.EC2_INSTANCE_TYPE}}/${date_string}"
+          if [[ ${{inputs.EC2_INSTANCE_TYPE_SUBFOLDER_BOOL}} == true ]]; then
+            s3_folder_uri+="/${{inputs.EC2_INSTANCE_TYPE}}"
+          fi
+
+          if [[ ${{inputs.DATE_EXECUTION_SUBFOLDER_BOOL}} == true ]]; then
+            date_string=$(date -u +"%d/%m/%Y_%H:%M:%S_UTC")
+            s3_folder_uri+="/${date_string}"
+          fi
 
           aws s3 cp ./outputs "s3://${s3_folder_uri}" --recursive
   stop-runner:

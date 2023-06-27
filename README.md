@@ -90,7 +90,3 @@ mlp run_cloud -p "myfirstpipeline" -i c6in.xlarge -s 150
 ```
 
 The instance type "-i" and the size "-s" is optional and has default values of respectively t2.micro and 30 G.
-
-## License
-
-MIT License
