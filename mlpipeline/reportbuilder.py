@@ -133,6 +133,8 @@ class ReportBuilder:
                         "EC2_INSTANCE_TYPE": "${{ matrix.EC2_INSTANCE_TYPE }}",
                         "EC2_TARGET_SIZE": "${{ github.event.inputs.EC2_TARGET_SIZE }}",
                         "EXPERIMENT_ID": "${{ github.event.inputs.EXPERIMENT_ID }}",
+                        "DATE_EXECUTION_SUBFOLDER_BOOL": "${{github.event.inputs.DATE_EXECUTION_SUBFOLDER_BOOL}}",
+                        "EC2_INSTANCE_TYPE_SUBFOLDER_BOOL": "${{github.event.inputs.EC2_INSTANCE_TYPE_SUBFOLDER_BOOL}}",
                     },
                     "secrets": {
                         "GH_PERSONAL_ACCESS_TOKEN": "${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}"
