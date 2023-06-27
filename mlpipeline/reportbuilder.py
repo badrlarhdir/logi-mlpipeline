@@ -10,7 +10,7 @@ from nbformat import read
 
 from .globals import PIPELINES_FOLDER
 
-DEFAULT_CMDS = "# Reproduce pipeline if any changes detected in dependencies\nmlp run_local -p main\n\n# Output the hash commit into the report\ngit log --pretty=format:'%h' -n 1 >> report.md\nprintf '\n' >> dag.md\ndvc dag --md >> report.md\n\n"
+DEFAULT_CMDS = "# Reproduce pipeline if any changes detected in dependencies\nmlp run_local -p main\n\n# Output the hash commit into the report\ngit log --pretty=format:'%h' -n 1 >> report.md\nprintf '\\n' >> dag.md\ndvc dag --md >> report.md\n\n"
 
 
 class ReportBuilder:
