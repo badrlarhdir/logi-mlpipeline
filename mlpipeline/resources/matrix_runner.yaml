@@ -16,7 +16,7 @@ name: Multi Runner
         required: true
         type: string
       DATE_EXECUTION_SUBFOLDER_BOOL:
-        description: 'Put the output in a execution date subfolder (ex: 27/06/2023_10:30:45_UTC/)'
+        description: 'Put the output in an execution date subfolder (ex: 27/06/2023_10:30:45_UTC/)'
         required: true
         type: boolean
         default: true
