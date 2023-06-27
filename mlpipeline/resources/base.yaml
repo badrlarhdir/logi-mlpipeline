@@ -18,13 +18,13 @@ name: Main pipeline
       DATE_EXECUTION_SUBFOLDER_BOOL:
         description: 'Put the output in a execution date subfolder (ex: 27/06/2023_10:30:45_UTC/)'
         required: true
-        type: boolean
-        default: true
+        type: string
+        default: "true"
       EC2_INSTANCE_TYPE_SUBFOLDER_BOOL:
         description: 'Put the output in a EC2 instance type folder (ex: m5a.xlarge/)'
         required: false
-        type: boolean
-        default: true
+        type: string
+        default: "true"
     secrets:
       GH_PERSONAL_ACCESS_TOKEN:
         description: 'GitHub Personal Access Token'
@@ -118,11 +118,11 @@ jobs:
         run: |
           s3_folder_uri="${{vars.S3_OUTPUT_FOLDER}}/${{inputs.EXPERIMENT_ID}}"
 
-          if [[ ${{inputs.EC2_INSTANCE_TYPE_SUBFOLDER_BOOL}} == true ]]; then
+          if [[ ${{inputs.EC2_INSTANCE_TYPE_SUBFOLDER_BOOL}} == "true" ]]; then
             s3_folder_uri+="/${{inputs.EC2_INSTANCE_TYPE}}"
           fi
 
-          if [[ ${{inputs.DATE_EXECUTION_SUBFOLDER_BOOL}} == true ]]; then
+          if [[ ${{inputs.DATE_EXECUTION_SUBFOLDER_BOOL}} == "true" ]]; then
             date_string=$(date -u +"%d/%m/%Y_%H:%M:%S_UTC")
             s3_folder_uri+="/${date_string}"
           fi
