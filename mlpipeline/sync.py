@@ -97,10 +97,6 @@ def sync(
                     # Use shutil.rmtree to delete the directory and its contents
                     shutil.rmtree(item_path)
 
-            # remove all the files inside .github/workflows
-            for file in pathlib.Path(".github/workflows").iterdir():
-                file.unlink()
-
         # read the pipelines.json file and sync all the pipelines one by one
         pipelines_path = f"{PIPELINES_FOLDER}/pipelines.json"
         if pathlib.Path(pipelines_path).exists():
@@ -118,6 +114,11 @@ def sync(
 
     # remove the params.yaml file if force is True
     if force:
+        # remove all the folders inside .github
+        for folder in pathlib.Path(".github").iterdir():
+            if folder.is_dir():
+                shutil.rmtree(folder)
+
         pathlib.Path("params.yaml").unlink(missing_ok=True)
         pathlib.Path(f"{PIPELINES_FOLDER}/{pipeline}/params.yaml").unlink(
             missing_ok=True
