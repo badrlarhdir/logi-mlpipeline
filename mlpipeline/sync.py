@@ -88,6 +88,11 @@ def sync(
     # Sync all the pipelines
     if all:
         if force:
+            # remove all the folders inside .github
+            for folder in pathlib.Path(".github").iterdir():
+                if folder.is_dir():
+                    shutil.rmtree(folder)
+
             # Iterate over all items in the folder
             for item in os.listdir(PIPELINES_FOLDER):
                 item_path = os.path.join(PIPELINES_FOLDER, item)
@@ -114,11 +119,6 @@ def sync(
 
     # remove the params.yaml file if force is True
     if force:
-        # remove all the folders inside .github
-        for folder in pathlib.Path(".github").iterdir():
-            if folder.is_dir():
-                shutil.rmtree(folder)
-
         pathlib.Path("params.yaml").unlink(missing_ok=True)
         pathlib.Path(f"{PIPELINES_FOLDER}/{pipeline}/params.yaml").unlink(
             missing_ok=True
